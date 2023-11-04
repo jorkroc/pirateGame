@@ -13,11 +13,14 @@ pygame.display.set_caption(title)
 clock = pygame.time.Clock()
 running = True
 dt = 0
-shift = 1000
+
+shift = 1
+velocity = [0,0]
 
 all_sprites_list = pygame.sprite.Group() 
 
-player = Ship("red", 40, 40, screen_width / 2, screen_height / 2)
+player = Ship("red", 40, 40, screen.get_width()/2, screen.get_height()/2)
+
 #         Up     Down   Left   Right
 moving = [False, False, False, False]
 
@@ -39,12 +42,21 @@ while running:
     keys = pygame.key.get_pressed()
     if keys[pygame.K_w]:
         moving[0] = True
+
+        velocity[1] += shift
+        #island.shiftPositionY(shift)
     if keys[pygame.K_s]:
         moving[1] = True
+        velocity[1] -= shift
+        #island.shiftPositionY(-shift)
     if keys[pygame.K_a]:
         moving[2] = True
+        velocity[0] += shift
+        #island.shiftPositionX(shift)
     if keys[pygame.K_d]:
         moving[3] = True
+        velocity[0] -= shift
+        #island.shiftPositionX(-shift)
     
     displacement = pygame.Vector2(moving[0] - moving[1], moving[2] - moving[3])
     #pygame.math.Vector2.normalize_ip(displacement)
@@ -52,6 +64,12 @@ while running:
     island.shiftPositionY(displacement.x * shift * dt)
 
 
+    island.shiftPositionX(velocity[0])
+    island.shiftPositionY(velocity[1])
+
+    velocity[0] *= 0.9
+    velocity[1] *= 0.9
+    
     all_sprites_list.draw(screen) 
 
     pygame.display.flip()
