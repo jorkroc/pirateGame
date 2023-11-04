@@ -15,10 +15,13 @@ running = True
 dt = 0
 shift = 10
 
-player = Ship()
+all_sprites_list = pygame.sprite.Group() 
+
+player = Ship("red", 40, 40)
 #         Up     Down   Left   Right
 moving = [False, False, False, False]
 
+all_sprites_list.add(player) 
 island = Island(pygame.Vector2(50, 50), "yellow", 100)
 
 while running:
@@ -28,7 +31,6 @@ while running:
             running = False
 
     screen.fill("blue")
-
 
     pygame.draw.circle(screen, island.color, island.position, 30)
 
@@ -45,6 +47,8 @@ while running:
     if keys[pygame.K_d]:
         moving[3] = True
         island.shiftPositionX(-shift)
+
+    all_sprites_list.draw(screen) 
 
     pygame.display.flip()
 
