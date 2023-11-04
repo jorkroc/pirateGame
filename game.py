@@ -1,4 +1,5 @@
 import pygame
+from Ship import Ship
 
 pygame.init()
 
@@ -12,7 +13,9 @@ clock = pygame.time.Clock()
 running = True
 dt = 0
 
-player_pos = pygame.Vector2(screen.get_width() / 2, screen.get_height() / 2)
+player = Ship()
+#         Up     Down   Left   Right
+moving = [False, False, False, False]
 
 while running:
 
@@ -22,17 +25,17 @@ while running:
 
     screen.fill("blue")
 
-    pygame.draw.circle(screen, "red", player_pos, 40)
+    pygame.draw.circle(screen, "red", player.position, 40)
 
     keys = pygame.key.get_pressed()
     if keys[pygame.K_w]:
-        player_pos.y -= 300 * dt
+        moving[0] = True
     if keys[pygame.K_s]:
-        player_pos.y += 300 * dt
+        moving[1] = True
     if keys[pygame.K_a]:
-        player_pos.x -= 300 * dt
+        moving[2] = True
     if keys[pygame.K_d]:
-        player_pos.x += 300 * dt
+        moving[3] = True
 
     pygame.display.flip()
 
