@@ -1,6 +1,8 @@
 import pygame
 from ship import Ship
+from playership import PlayerShip
 from Island import Island
+from math import sqrt
 
 pygame.init()
 
@@ -19,7 +21,7 @@ velocity = [0,0]
 
 all_sprites_list = pygame.sprite.Group() 
 
-player = Ship("red", 40, 40, screen.get_width()/2, screen.get_height()/2)
+player = PlayerShip(screen_width / 2, screen_height / 2)
 
 all_sprites_list.add(player)
 island = Island(pygame.Vector2(50, 50), "yellow", 100)
