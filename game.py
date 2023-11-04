@@ -4,6 +4,7 @@ from ship import Ship
 from Island import Island
 from playership import PlayerShip
 from home import Home
+from bullets import Bullet
 
 pygame.init()
 
@@ -12,6 +13,14 @@ screen_height = 720
 map_width = 1000
 map_height = 1000
 title = "Pirate Game"
+
+minimap_width = 150
+minimap_height = 100
+minimap = pygame.Surface((minimap_width, minimap_height))
+minimap_rect = minimap.get_rect()
+minimap_rect.topleft = (10, 10)
+minimap_pos_x = (screen_width/2 * (minimap_width / screen_width))/0.1
+minimap_pos_y = (screen_height/2 * (minimap_width / screen_width))/0.1
 
 num_islands = 50
 num_enemies = 10
@@ -66,8 +75,6 @@ while running:
         if event.type == pygame.QUIT:
             running = False
 
-    screen.fill("blue")
-
     pygame.draw.circle(screen, island.color, island.position, 30)
 
     keys = pygame.key.get_pressed()
@@ -88,6 +95,16 @@ while running:
 
     velocity[0] *= 0.9
     velocity[1] *= 0.9
+
+    screen.fill("blue")
+    minimap.fill((255, 255, 255))  # Clear the minimap
+    #self.position.x += shift
+    #self.rect.center=self.position
+    minimap_pos_x -= velocity[0] * (minimap_width / screen_width)
+    minimap_pos_y -= velocity[1] * (minimap_width / screen_width)
+
+    pygame.draw.circle(minimap, "red", (int(0.1*(minimap_pos_x + (minimap_width / screen_width))), int(0.1*(minimap_pos_y - (minimap_height / screen_height)))), 5)
+    screen.blit(minimap, minimap_rect)
     
     all_sprites_list.draw(screen) 
 
