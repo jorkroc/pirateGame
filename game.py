@@ -186,7 +186,7 @@ while running:
     screen.blit(minimap, minimap_rect)
     
     all_sprites_list.draw(screen) 
-    screen.blit(letters['a'], (300, 300))
+    #screen.blit(letters['a'], (300, 300))
 
     pygame.display.flip()
 
