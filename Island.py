@@ -10,6 +10,12 @@ class Island:
 
     def setPosition(self, newPosition):
         self.position = newPosition
+        
+    def shiftPositionX(self, shift):
+        self.position.x += shift
+    
+    def shiftPositionY(self, shift):
+        self.position.y += shift
 
     def getTreasure(self):
         return self.treasure
