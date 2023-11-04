@@ -29,3 +29,5 @@ class Ship(pygame.sprite.Sprite):
         self.shiftPositionX(dx*self.speed/1000)
         self.shiftPositionY(dy*self.speed/1000)
 
+    def attack(self, sprite):
+        #Implement
