@@ -13,9 +13,13 @@ clock = pygame.time.Clock()
 running = True
 dt = 0
 
-player = Ship()
+all_sprites_list = pygame.sprite.Group() 
+
+player = Ship("red", 40, 40)
 #         Up     Down   Left   Right
 moving = [False, False, False, False]
+
+all_sprites_list.add(player) 
 
 while running:
 
@@ -25,7 +29,7 @@ while running:
 
     screen.fill("blue")
 
-    pygame.draw.circle(screen, "red", player.position, 40)
+    #pygame.draw.circle(screen, "red", player.position, 40)
 
     keys = pygame.key.get_pressed()
     if keys[pygame.K_w]:
@@ -36,6 +40,8 @@ while running:
         moving[2] = True
     if keys[pygame.K_d]:
         moving[3] = True
+
+    all_sprites_list.draw(screen) 
 
     pygame.display.flip()
 
