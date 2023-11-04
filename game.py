@@ -21,8 +21,9 @@ player = Ship("red", 40, 40, screen_width / 2, screen_height / 2)
 #         Up     Down   Left   Right
 moving = [False, False, False, False]
 
-all_sprites_list.add(player) 
+all_sprites_list.add(player)
 island = Island(pygame.Vector2(50, 50), "yellow", 100)
+all_sprites_list.add(island)
 
 while running:
 
