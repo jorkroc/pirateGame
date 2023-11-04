@@ -5,11 +5,9 @@ from ship import Ship
 from Island import Island
 from playership import PlayerShip
 from home import Home
-<<<<<<< HEAD
-from jugger import Jugger
 from grape import Grape
-=======
->>>>>>> 2cafa3904d326b070f3666138b827f8303b5f134
+from jugger import Jugger
+
 
 pygame.init()
 
@@ -57,7 +55,7 @@ for i in range(num_islands):
     moving_objects.append(island) 
 
 enemies = []
-for i in range(num_enemies):
+for i in range(num_enemies%4):
     randX = random.randint(-map_width//10, map_width//10)*10
     randY = random.randint(-map_width//10, map_width//10)*10
     enemy = Ship("orange", 40, 40, randX, randY, enemy_speed)
@@ -68,35 +66,31 @@ for i in range(num_enemies):
     all_sprites_list.add(enemy)
     moving_objects.append(enemy)
     enemies.append(enemy)
-<<<<<<< HEAD
-
-for i in range(num_enemies//4):
-    randX = random.randint(-map_width//10, map_width//10)*10
-    randY = random.randint(-map_width//10, map_width//10)*10
-    enemy = Jugger(randX, randY, enemy_speed)
-    while pygame.sprite.collide_rect(home, enemy) or pygame.sprite.collide_rect(player,enemy):
-        randX = random.randint(-map_width//10, map_width//10)*10
-        randY = random.randint(-map_width//10, map_width//10)*10
-        enemy = Jugger(randX, randY, enemy_speed)
-    all_sprites_list.add(enemy)
-    moving_objects.append(enemy)
-    enemies.append(enemy)
     
 for i in range(num_enemies//4):
     randX = random.randint(-map_width//10, map_width//10)*10
     randY = random.randint(-map_width//10, map_width//10)*10
-    enemy = Grape(randX, randY, enemy_speed)
+    enemy = Jugger(randX, randY, enemy_speed) 
     while pygame.sprite.collide_rect(home, enemy) or pygame.sprite.collide_rect(player,enemy):
         randX = random.randint(-map_width//10, map_width//10)*10
         randY = random.randint(-map_width//10, map_width//10)*10
-        enemy = Grape(randX, randY, enemy_speed)
+        enemy = Jugger(randX, randY, enemy_speed) 
     all_sprites_list.add(enemy)
     moving_objects.append(enemy)
     enemies.append(enemy)
 
-=======
->>>>>>> 2cafa3904d326b070f3666138b827f8303b5f134
-    
+for i in range(num_enemies//4):
+    randX = random.randint(-map_width//10, map_width//10)*10
+    randY = random.randint(-map_width//10, map_width//10)*10
+    enemy = Grape(randX, randY, enemy_speed) 
+    while pygame.sprite.collide_rect(home, enemy) or pygame.sprite.collide_rect(player,enemy):
+        randX = random.randint(-map_width//10, map_width//10)*10
+        randY = random.randint(-map_width//10, map_width//10)*10
+        enemy = Grape(randX, randY, enemy_speed) 
+    all_sprites_list.add(enemy)
+    moving_objects.append(enemy)
+    enemies.append(enemy)
+
 # PLAYER HAS TO BE THE LAST ADDED
 all_sprites_list.add(player)
 while running:
