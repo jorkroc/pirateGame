@@ -5,7 +5,6 @@ from ship import Ship
 from Island import Island
 from playership import PlayerShip
 from home import Home
-from jugger import Jugger
 
 pygame.init()
 
@@ -34,6 +33,7 @@ moving_objects = []
 
 player = PlayerShip(screen.get_width()/2, screen.get_height()/2)
 home = Home()
+player.health = 100
 
 all_sprites_list.add(home)
 moving_objects.append(home)
@@ -54,7 +54,7 @@ for i in range(num_islands):
     moving_objects.append(island) 
 
 enemies = []
-for i in range(num_enemies%4):
+for i in range(num_enemies):
     randX = random.randint(-map_width//10, map_width//10)*10
     randY = random.randint(-map_width//10, map_width//10)*10
     enemy = Ship("orange", 40, 40, randX, randY, enemy_speed)
@@ -65,19 +65,6 @@ for i in range(num_enemies%4):
     all_sprites_list.add(enemy)
     moving_objects.append(enemy)
     enemies.append(enemy)
-
-for i in range(num_enemies//4):
-    randX = random.randint(-map_width//10, map_width//10)*10
-    randY = random.randint(-map_width//10, map_width//10)*10
-    enemy = Jugger(randX, randY, enemy_speed)
-    while pygame.sprite.collide_rect(home, enemy) or pygame.sprite.collide_rect(player,enemy):
-        randX = random.randint(-map_width//10, map_width//10)*10
-        randY = random.randint(-map_width//10, map_width//10)*10
-        enemy = Jugger(randX, randY, enemy_speed)
-    all_sprites_list.add(enemy)
-    moving_objects.append(enemy)
-    enemies.append(enemy)
-
     
 while running:
 
@@ -103,7 +90,14 @@ while running:
         sprite.shiftPositionX(velocity[0])
         sprite.shiftPositionY(velocity[1])
         if pygame.sprite.collide_rect(player, sprite):
-            print("collision")
+            try:
+                if player.health > sprite.health:
+                    print("collision")
+                else:
+                    print("player dead")
+            except:
+                print("nope")
+
 
     for enemy in enemies:
         if math.hypot((enemy.xpos-player.xpos), (enemy.ypos-player.ypos)) <= enemy_range:
