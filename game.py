@@ -19,6 +19,17 @@ num_enemies = 10
 enemy_speed = 5
 enemy_range = 200
 
+gold = 0
+font = pygame.font.SysFont('timesnewroman', 30)
+black = (0, 0, 0)
+letters = {}
+for i in range(26):
+    char = chr(ord('a') + i)
+    letters[char] = font.render(char, False, black)
+for i in range(26):
+    char = chr(ord('A') + i)
+    letters[char] = font.render(char, False, black)
+
 screen = pygame.display.set_mode((screen_width, screen_height))
 pygame.display.set_caption(title)
 clock = pygame.time.Clock()
@@ -92,22 +103,25 @@ while running:
         if pygame.sprite.collide_rect(player, sprite):
             try:
                 if player.health > sprite.health:
-                    print("collision")
+                    moving_objects.remove(sprite)
+                    all_sprites_list.remove(sprite)
                 else:
                     print("player dead")
             except:
-                print("nope")
+                pass
 
 
     for enemy in enemies:
         if math.hypot((enemy.xpos-player.xpos), (enemy.ypos-player.ypos)) <= enemy_range:
             print("Chase")
             enemy.chase(player)
+    
 
     velocity[0] *= 0.9
     velocity[1] *= 0.9
     
     all_sprites_list.draw(screen) 
+    screen.blit(letters['a'], (300, 300))
 
     pygame.display.flip()
 
