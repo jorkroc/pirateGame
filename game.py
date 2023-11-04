@@ -29,7 +29,6 @@ while running:
 
     screen.fill("blue")
 
-    pygame.draw.circle(screen, "red", player.position, 40)
 
     pygame.draw.circle(screen, island.color, island.position, 30)
 
