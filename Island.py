@@ -1,6 +1,12 @@
-class Island:
+import pygame
+
+class Island(pygame.sprite.Sprite):
 
     def __init__(self, position, color, treasure):
+        super().__init__()
+        self.image = pygame.Surface([80,80])
+        self.image.fill(color)
+        self.rect = self.image.get_rect()
         self.position = position
         self.color = color
         self.treasure = treasure
