@@ -8,6 +8,7 @@ from home import Home
 from grape import Grape
 from jugger import Jugger
 from rammer import Rammer
+from finalboss import FinalBoss
 
 
 pygame.init()
@@ -103,6 +104,11 @@ for i in range(num_enemies//4):
     all_sprites_list.add(enemy)
     moving_objects.append(enemy)
     enemies.append(enemy)
+
+finalboss = FinalBoss(100, 100, enemy_speed)
+all_sprites_list.add(finalboss)
+moving_objects.append(finalboss)
+enemies.append(finalboss)
 
 # PLAYER HAS TO BE THE LAST ADDED
 all_sprites_list.add(player)
