@@ -3,11 +3,14 @@ import random
 from ship import Ship
 from Island import Island
 from playership import PlayerShip
+from home import Home
 
 pygame.init()
 
 screen_width = 1280
 screen_height = 720
+map_width = 1000
+map_height = 1000
 title = "Pirate Game"
 
 screen = pygame.display.set_mode((screen_width, screen_height))
@@ -23,10 +26,15 @@ all_sprites_list = pygame.sprite.Group()
 moving_objects = []
 
 player = PlayerShip(screen.get_width()/2, screen.get_height()/2)
+player = Ship("red", 40, 40, screen.get_width()/2, screen.get_height()/2)
+home = Home()
+
+all_sprites_list.add(home)
+moving_objects.append(home)
 
 all_sprites_list.add(player)
 for i in range(50):
-    island = Island(pygame.Vector2(random.randint(-100,100)*10, random.randint(-100,100))*10, "yellow", random.randint(10, 100))
+    island = Island(pygame.Vector2(random.randint(-map_width//10,map_width//10)*10, random.randint(-map_height//10,map_height//10))*10, "yellow", random.randint(10, 100))
     all_sprites_list.add(island)
     moving_objects.append(island) 
     
@@ -53,6 +61,8 @@ while running:
     for sprite in moving_objects:
         sprite.shiftPositionX(velocity[0])
         sprite.shiftPositionY(velocity[1])
+        if pygame.sprite.collide_rect(player, sprite):
+            print("collision")
 
     velocity[0] *= 0.9
     velocity[1] *= 0.9
