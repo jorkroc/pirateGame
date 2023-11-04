@@ -13,6 +13,9 @@ map_width = 1000
 map_height = 1000
 title = "Pirate Game"
 
+num_islands = 50
+num_enemies = 10
+
 screen = pygame.display.set_mode((screen_width, screen_height))
 pygame.display.set_caption(title)
 clock = pygame.time.Clock()
@@ -33,7 +36,7 @@ moving_objects.append(home)
 
 all_sprites_list.add(player)
 
-for i in range(50):
+for i in range(num_islands):
     randX = random.randint(-map_width//10, map_width//10)*10
     randY = random.randint(-map_width//10, map_width//10)*10
     position = pygame.Vector2(randX, randY)*10
@@ -46,7 +49,7 @@ for i in range(50):
     all_sprites_list.add(island)
     moving_objects.append(island) 
 
-for i in range(10):
+for i in range(num_enemies):
     randX = random.randint(-map_width//10, map_width//10)*10
     randY = random.randint(-map_width//10, map_width//10)*10
     enemy = Ship("orange", 40, 40, randX, randY)
