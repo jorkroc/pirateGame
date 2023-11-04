@@ -13,7 +13,7 @@ pygame.display.set_caption(title)
 clock = pygame.time.Clock()
 running = True
 dt = 0
-shift = 10
+shift = 1000
 
 all_sprites_list = pygame.sprite.Group() 
 
@@ -34,19 +34,22 @@ while running:
 
     pygame.draw.circle(screen, island.color, island.position, 30)
 
+    moving = [False, False, False, False]
     keys = pygame.key.get_pressed()
     if keys[pygame.K_w]:
         moving[0] = True
-        island.shiftPositionY(shift)
     if keys[pygame.K_s]:
         moving[1] = True
-        island.shiftPositionY(-shift)
     if keys[pygame.K_a]:
         moving[2] = True
-        island.shiftPositionX(shift)
     if keys[pygame.K_d]:
         moving[3] = True
-        island.shiftPositionX(-shift)
+    
+    displacement = pygame.Vector2(moving[0] - moving[1], moving[2] - moving[3])
+    #pygame.math.Vector2.normalize_ip(displacement)
+    island.shiftPositionX(displacement.y * shift * dt)
+    island.shiftPositionY(displacement.x * shift * dt)
+
 
     all_sprites_list.draw(screen) 
 
