@@ -21,9 +21,6 @@ all_sprites_list = pygame.sprite.Group()
 
 player = Ship("red", 40, 40, screen.get_width()/2, screen.get_height()/2)
 
-#         Up     Down   Left   Right
-moving = [False, False, False, False]
-
 all_sprites_list.add(player)
 island = Island(pygame.Vector2(50, 50), "yellow", 100)
 all_sprites_list.add(island)
@@ -38,31 +35,15 @@ while running:
 
     pygame.draw.circle(screen, island.color, island.position, 30)
 
-    moving = [False, False, False, False]
     keys = pygame.key.get_pressed()
     if keys[pygame.K_w]:
-        moving[0] = True
-
         velocity[1] += shift
-        #island.shiftPositionY(shift)
     if keys[pygame.K_s]:
-        moving[1] = True
         velocity[1] -= shift
-        #island.shiftPositionY(-shift)
     if keys[pygame.K_a]:
-        moving[2] = True
         velocity[0] += shift
-        #island.shiftPositionX(shift)
     if keys[pygame.K_d]:
-        moving[3] = True
         velocity[0] -= shift
-        #island.shiftPositionX(-shift)
-    
-    displacement = pygame.Vector2(moving[0] - moving[1], moving[2] - moving[3])
-    #pygame.math.Vector2.normalize_ip(displacement)
-    island.shiftPositionX(displacement.y * shift * dt)
-    island.shiftPositionY(displacement.x * shift * dt)
-
 
     island.shiftPositionX(velocity[0])
     island.shiftPositionY(velocity[1])
