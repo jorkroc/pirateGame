@@ -4,3 +4,4 @@ class Ship:
     def __init__(self):
         self.position = Vector2(400, 400)
         self.color = 0
+        self.velocity = [0,0]
