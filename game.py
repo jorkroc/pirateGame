@@ -1,5 +1,6 @@
 import pygame
 import random
+import math
 from ship import Ship
 from Island import Island
 from playership import PlayerShip
@@ -15,6 +16,7 @@ title = "Pirate Game"
 
 num_islands = 50
 num_enemies = 10
+enemy_speed = 5
 
 screen = pygame.display.set_mode((screen_width, screen_height))
 pygame.display.set_caption(title)
@@ -41,7 +43,7 @@ for i in range(num_islands):
     randY = random.randint(-map_width//10, map_width//10)*10
     position = pygame.Vector2(randX, randY)*10
     island = Island(position, "yellow", random.randint(10, 100))
-    while pygame.sprite.collide_rect(home, island):
+    while pygame.sprite.collide_rect(home, island) or pygame.sprite.collide_rect(player, island):
         randX = random.randint(-map_width//10, map_width//10)*10
         randY = random.randint(-map_width//10, map_width//10)*10
         position = pygame.Vector2(randX, randY)*10
@@ -49,16 +51,18 @@ for i in range(num_islands):
     all_sprites_list.add(island)
     moving_objects.append(island) 
 
+enemies = []
 for i in range(num_enemies):
     randX = random.randint(-map_width//10, map_width//10)*10
     randY = random.randint(-map_width//10, map_width//10)*10
-    enemy = Ship("orange", 40, 40, randX, randY)
-    while pygame.sprite.collide_rect(home, enemy):
+    enemy = Ship("orange", 40, 40, randX, randY, enemy_speed)
+    while pygame.sprite.collide_rect(home, enemy) or pygame.sprite.collide_rect(player,enemy):
         randX = random.randint(-map_width//10, map_width//10)*10
         randY = random.randint(-map_width//10, map_width//10)*10
-        enemy = Ship("orange", 40, 40, randX, randY)
+        enemy = Ship("orange", 40, 40, randX, randY, enemy_speed)
     all_sprites_list.add(enemy)
     moving_objects.append(enemy)
+    enemies.append(enemy)
     
 while running:
 
@@ -85,6 +89,11 @@ while running:
         sprite.shiftPositionY(velocity[1])
         if pygame.sprite.collide_rect(player, sprite):
             print("collision")
+
+    for enemy in enemies:
+        if math.hypot((enemy.xpos-player.xpos), (enemy.ypos-player.ypos)) <= 200:
+            print("Chase")
+            enemy.chase(player)
 
     velocity[0] *= 0.9
     velocity[1] *= 0.9
