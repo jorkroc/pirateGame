@@ -19,6 +19,9 @@ map_width = 1000
 map_height = 1000
 title = "Pirate Game"
 
+finalbossX = 100
+finalbossY = 100
+
 minimap_width = 150
 minimap_height = 100
 minimap = pygame.Surface((minimap_width, minimap_height))
@@ -113,7 +116,7 @@ for i in range(num_enemies//4):
     moving_objects.append(enemy)
     enemies.append(enemy)
 
-finalboss = FinalBoss(100, 100, enemy_speed)
+finalboss = FinalBoss(finalbossX, finalbossY, enemy_speed)
 all_sprites_list.add(finalboss)
 moving_objects.append(finalboss)
 enemies.append(finalboss)
