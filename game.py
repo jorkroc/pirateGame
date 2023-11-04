@@ -32,10 +32,16 @@ all_sprites_list.add(home)
 moving_objects.append(home)
 
 all_sprites_list.add(player)
+
 for i in range(50):
     island = Island(pygame.Vector2(random.randint(-map_width//10,map_width//10)*10, random.randint(-map_height//10,map_height//10))*10, "yellow", random.randint(10, 100))
     all_sprites_list.add(island)
     moving_objects.append(island) 
+
+for i in range(50):
+    enemy = Ship("orange", 40, 40, random.randint(-map_width//10,map_width//10)*10, random.randint(-map_width//10,map_width//10)*10)
+    all_sprites_list.add(enemy)
+    moving_objects.append(enemy)
     
 while running:
 
