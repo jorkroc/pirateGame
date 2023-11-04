@@ -2,6 +2,7 @@ import pygame
 import random
 from ship import Ship
 from Island import Island
+from playership import PlayerShip
 from home import Home
 
 pygame.init()
@@ -22,6 +23,7 @@ velocity = [0,0]
 all_sprites_list = pygame.sprite.Group() 
 moving_objects = []
 
+player = PlayerShip(screen.get_width()/2, screen.get_height()/2)
 player = Ship("red", 40, 40, screen.get_width()/2, screen.get_height()/2)
 home = Home()
 
