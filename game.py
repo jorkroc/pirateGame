@@ -1,9 +1,7 @@
 import pygame
 import random
 from ship import Ship
-from playership import PlayerShip
 from Island import Island
-from math import sqrt
 
 pygame.init()
 
@@ -23,7 +21,7 @@ velocity = [0,0]
 all_sprites_list = pygame.sprite.Group() 
 moving_objects = []
 
-player = PlayerShip(screen_width / 2, screen_height / 2)
+player = Ship("red", 40, 40, screen.get_width()/2, screen.get_height()/2)
 
 all_sprites_list.add(player)
 for i in range(50):
@@ -31,13 +29,6 @@ for i in range(50):
     all_sprites_list.add(island)
     moving_objects.append(island) 
     
-# island = Island(pygame.Vector2(50, 50), "yellow", 100)
-# island2 = Island(pygame.Vector2(-400, 400), "yellow", 100)
-# all_sprites_list.add(island)
-# all_sprites_list.add(island2)
-# moving_objects.append(island)
-# moving_objects.append(island2)
-
 while running:
 
     for event in pygame.event.get():
