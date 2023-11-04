@@ -1,4 +1,5 @@
 import pygame
+import random
 
 class Island(pygame.sprite.Sprite):
 
@@ -10,6 +11,13 @@ class Island(pygame.sprite.Sprite):
         self.position = position
         self.color = color
         self.treasure = treasure
+        
+        width=1000
+        height=1000
+        if (width/4>self.position.x and height/3<self.position.y) or \
+            (2*width/5<self.position.x and 2*height/3<self.position.y) or \
+            (3*width/5<self.position.x and height/2>self.position.y):
+            self.treasure=random.randint(70, 170)
 
     def getPosition(self):
         return self.position
