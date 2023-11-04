@@ -1,12 +1,9 @@
 import pygame
 
 class Ship(pygame.sprite.Sprite):
-    def __init__(self, color, width, height):
+    def __init__(self, color, width, height, x_pos, y_pos):
         super().__init__()
         self.image = pygame.Surface([width, height])
         self.image.fill(color)
-        self.rect = self.image.get_rect()
-        self.position = pygame.Vector2(400, 400)
-        self.rect.x = 400
-        self.rect.y = 400
+        self.rect = pygame.Vector2(x_pos, y_pos)
 
