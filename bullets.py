@@ -10,7 +10,3 @@ class Bullet(pygame.sprite.Sprite):
 
     def update(self):
         self.rect.y -= 5
-
-# Create a player instance
-
-#all_sprites.add(player)
