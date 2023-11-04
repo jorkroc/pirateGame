@@ -1,5 +1,6 @@
 import pygame
-from Ship import Ship
+from ship import Ship
+from Island import Island
 
 pygame.init()
 
@@ -12,10 +13,13 @@ pygame.display.set_caption(title)
 clock = pygame.time.Clock()
 running = True
 dt = 0
+shift = 10
 
 player = Ship()
 #         Up     Down   Left   Right
 moving = [False, False, False, False]
+
+island = Island(pygame.Vector2(50, 50), "yellow", 100)
 
 while running:
 
@@ -27,15 +31,21 @@ while running:
 
     pygame.draw.circle(screen, "red", player.position, 40)
 
+    pygame.draw.circle(screen, island.color, island.position, 30)
+
     keys = pygame.key.get_pressed()
     if keys[pygame.K_w]:
         moving[0] = True
+        island.shiftPositionY(shift)
     if keys[pygame.K_s]:
         moving[1] = True
+        island.shiftPositionY(-shift)
     if keys[pygame.K_a]:
         moving[2] = True
+        island.shiftPositionX(shift)
     if keys[pygame.K_d]:
         moving[3] = True
+        island.shiftPositionX(-shift)
 
     pygame.display.flip()
 
