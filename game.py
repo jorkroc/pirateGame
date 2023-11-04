@@ -38,8 +38,6 @@ player.health = 100
 all_sprites_list.add(home)
 moving_objects.append(home)
 
-all_sprites_list.add(player)
-
 for i in range(num_islands):
     randX = random.randint(-map_width//10, map_width//10)*10
     randY = random.randint(-map_width//10, map_width//10)*10
@@ -66,6 +64,8 @@ for i in range(num_enemies):
     moving_objects.append(enemy)
     enemies.append(enemy)
     
+# PLAYER HAS TO BE THE LAST ADDED
+all_sprites_list.add(player)
 while running:
 
     for event in pygame.event.get():
