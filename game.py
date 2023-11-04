@@ -17,6 +17,7 @@ title = "Pirate Game"
 num_islands = 50
 num_enemies = 10
 enemy_speed = 5
+enemy_range = 200
 
 screen = pygame.display.set_mode((screen_width, screen_height))
 pygame.display.set_caption(title)
@@ -91,7 +92,7 @@ while running:
             print("collision")
 
     for enemy in enemies:
-        if math.hypot((enemy.xpos-player.xpos), (enemy.ypos-player.ypos)) <= 200:
+        if math.hypot((enemy.xpos-player.xpos), (enemy.ypos-player.ypos)) <= enemy_range:
             print("Chase")
             enemy.chase(player)
 
