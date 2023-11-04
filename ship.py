@@ -1,7 +1,7 @@
 import pygame
 
 class Ship(pygame.sprite.Sprite):
-    def __init__(self, color, width, height, xpos, ypos):
+    def __init__(self, color, width, height, xpos, ypos, speed):
         super().__init__()
         self.image = pygame.Surface([width, height])
         self.image.fill(color)
@@ -10,9 +10,11 @@ class Ship(pygame.sprite.Sprite):
         self.height = height
         self.xpos = xpos
         self.ypos = ypos
+        self.speed = speed
         self.rect.x = xpos - width / 2
         self.rect.y = ypos - height / 2
         self.rotation = 0
+        self.health = 0
 
     def shiftPositionX(self, shift):
         self.xpos += shift
@@ -21,3 +23,13 @@ class Ship(pygame.sprite.Sprite):
     def shiftPositionY(self,shift):
         self.ypos += shift
         self.rect.y = self.ypos - self.height / 2
+
+    def chase(self, sprite):
+        dx = sprite.xpos - self.xpos
+        dy = sprite.ypos - self.ypos
+        self.shiftPositionX(dx*self.speed/1000)
+        self.shiftPositionY(dy*self.speed/1000)
+
+    def attack(self, sprite):
+        pass
+        #Implement
