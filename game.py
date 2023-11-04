@@ -5,6 +5,7 @@ from ship import Ship
 from Island import Island
 from playership import PlayerShip
 from home import Home
+from jugger import Jugger
 
 pygame.init()
 
@@ -53,7 +54,7 @@ for i in range(num_islands):
     moving_objects.append(island) 
 
 enemies = []
-for i in range(num_enemies):
+for i in range(num_enemies%4):
     randX = random.randint(-map_width//10, map_width//10)*10
     randY = random.randint(-map_width//10, map_width//10)*10
     enemy = Ship("orange", 40, 40, randX, randY, enemy_speed)
@@ -64,6 +65,19 @@ for i in range(num_enemies):
     all_sprites_list.add(enemy)
     moving_objects.append(enemy)
     enemies.append(enemy)
+
+for i in range(num_enemies//4):
+    randX = random.randint(-map_width//10, map_width//10)*10
+    randY = random.randint(-map_width//10, map_width//10)*10
+    enemy = Jugger(randX, randY, enemy_speed)
+    while pygame.sprite.collide_rect(home, enemy) or pygame.sprite.collide_rect(player,enemy):
+        randX = random.randint(-map_width//10, map_width//10)*10
+        randY = random.randint(-map_width//10, map_width//10)*10
+        enemy = Jugger(randX, randY, enemy_speed)
+    all_sprites_list.add(enemy)
+    moving_objects.append(enemy)
+    enemies.append(enemy)
+
     
 while running:
 
