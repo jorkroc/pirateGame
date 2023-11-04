@@ -29,8 +29,6 @@ while running:
 
     screen.fill("blue")
 
-    #pygame.draw.circle(screen, "red", player.position, 40)
-
     keys = pygame.key.get_pressed()
     if keys[pygame.K_w]:
         moving[0] = True
@@ -44,7 +42,7 @@ while running:
     all_sprites_list.draw(screen) 
 
     pygame.display.flip()
-
+    
     dt = clock.tick(60) / 1000
 
 pygame.quit()

@@ -8,7 +8,4 @@ class Ship(pygame.sprite.Sprite):
         self.rect = self.image.get_rect()
         self.position = pygame.Vector2(400, 400)
     
-    def draw(screen):
-        screen.blit(self.image, (400, 400))
-
 
