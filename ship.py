@@ -7,5 +7,6 @@ class Ship(pygame.sprite.Sprite):
         self.image.fill(color)
         self.rect = self.image.get_rect()
         self.position = pygame.Vector2(400, 400)
-    
+        self.rect.x = 400
+        self.rect.y = 400
 
