@@ -1,4 +1,5 @@
 import pygame
+import random
 from ship import Ship
 from Island import Island
 
@@ -18,12 +19,22 @@ shift = 1
 velocity = [0,0]
 
 all_sprites_list = pygame.sprite.Group() 
+moving_objects = []
 
 player = Ship("red", 40, 40, screen.get_width()/2, screen.get_height()/2)
 
 all_sprites_list.add(player)
-island = Island(pygame.Vector2(50, 50), "yellow", 100)
-all_sprites_list.add(island)
+for i in range(50):
+    island = Island(pygame.Vector2(random.randint(-100,100)*10, random.randint(-100,100))*10, "yellow", random.randint(10, 100))
+    all_sprites_list.add(island)
+    moving_objects.append(island) 
+    
+# island = Island(pygame.Vector2(50, 50), "yellow", 100)
+# island2 = Island(pygame.Vector2(-400, 400), "yellow", 100)
+# all_sprites_list.add(island)
+# all_sprites_list.add(island2)
+# moving_objects.append(island)
+# moving_objects.append(island2)
 
 while running:
 
@@ -45,8 +56,9 @@ while running:
     if keys[pygame.K_d]:
         velocity[0] -= shift
 
-    island.shiftPositionX(velocity[0])
-    island.shiftPositionY(velocity[1])
+    for sprite in moving_objects:
+        sprite.shiftPositionX(velocity[0])
+        sprite.shiftPositionY(velocity[1])
 
     velocity[0] *= 0.9
     velocity[1] *= 0.9
