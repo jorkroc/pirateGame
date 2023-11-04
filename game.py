@@ -26,7 +26,6 @@ all_sprites_list = pygame.sprite.Group()
 moving_objects = []
 
 player = PlayerShip(screen.get_width()/2, screen.get_height()/2)
-player = Ship("red", 40, 40, screen.get_width()/2, screen.get_height()/2)
 home = Home()
 
 all_sprites_list.add(home)
