@@ -21,8 +21,9 @@ player = Ship("red", 40, 40, 400, 400)
 #         Up     Down   Left   Right
 moving = [False, False, False, False]
 
-all_sprites_list.add(player) 
+all_sprites_list.add(player)
 island = Island(pygame.Vector2(50, 50), "yellow", 100)
+all_sprites_list.add(island)
 
 while running:
 
@@ -31,8 +32,6 @@ while running:
             running = False
 
     screen.fill("blue")
-
-    pygame.draw.circle(screen, island.color, island.position, 30)
 
     keys = pygame.key.get_pressed()
     if keys[pygame.K_w]:
