@@ -33,8 +33,6 @@ while running:
 
     screen.fill("blue")
 
-    pygame.draw.circle(screen, island.color, island.position, 30)
-
     keys = pygame.key.get_pressed()
     if keys[pygame.K_w]:
         moving[0] = True

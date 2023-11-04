@@ -19,9 +19,11 @@ class Island(pygame.sprite.Sprite):
         
     def shiftPositionX(self, shift):
         self.position.x += shift
+        self.rect.center=self.position
     
     def shiftPositionY(self, shift):
         self.position.y += shift
+        self.rect.center=self.position
 
     def getTreasure(self):
         return self.treasure
