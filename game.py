@@ -38,13 +38,22 @@ for i in range(50):
     randY = random.randint(-map_width//10, map_width//10)*10
     position = pygame.Vector2(randX, randY)*10
     island = Island(position, "yellow", random.randint(10, 100))
+    while pygame.sprite.collide_rect(home, island):
+        randX = random.randint(-map_width//10, map_width//10)*10
+        randY = random.randint(-map_width//10, map_width//10)*10
+        position = pygame.Vector2(randX, randY)*10
+        island = Island(position, "yellow", random.randint(10, 100))
     all_sprites_list.add(island)
     moving_objects.append(island) 
 
-for i in range(50):
+for i in range(10):
     randX = random.randint(-map_width//10, map_width//10)*10
     randY = random.randint(-map_width//10, map_width//10)*10
     enemy = Ship("orange", 40, 40, randX, randY)
+    while pygame.sprite.collide_rect(home, enemy):
+        randX = random.randint(-map_width//10, map_width//10)*10
+        randY = random.randint(-map_width//10, map_width//10)*10
+        enemy = Ship("orange", 40, 40, randX, randY)
     all_sprites_list.add(enemy)
     moving_objects.append(enemy)
     
