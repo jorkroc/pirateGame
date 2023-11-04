@@ -14,6 +14,7 @@ class Ship(pygame.sprite.Sprite):
         self.rect.x = xpos - width / 2
         self.rect.y = ypos - height / 2
         self.rotation = 0
+        self.health = 0
 
     def shiftPositionX(self, shift):
         self.xpos += shift
