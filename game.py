@@ -17,7 +17,7 @@ shift = 10
 
 all_sprites_list = pygame.sprite.Group() 
 
-player = Ship("red", 40, 40)
+player = Ship("red", 40, 40, 400, 400)
 #         Up     Down   Left   Right
 moving = [False, False, False, False]
 
