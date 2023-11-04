@@ -14,11 +14,11 @@ class PlayerShip(ship.Ship):
         self.territory = Territory.SAFE
     
     def updateTerr(self,width,height):
-        if width/4>xpos and height/3<ypos:
+        if width/4>self.xpos and height/3<self.ypos:
             self.territory=Territory.RAMMER
-        elif 2*width/5<xpos and 2*height/3<ypos:
+        elif 2*width/5<self.xpos and 2*height/3<self.ypos:
             self.territory=Territory.GRAPE
-        elif 3*width/5<xpos and height/2>ypos:
+        elif 3*width/5<self.xpos and height/2>self.ypos:
             self.territory=Territory.JUGGERNAUT
         else:
             self.territory=Territory.ROYAL
