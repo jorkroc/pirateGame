@@ -8,3 +8,4 @@ class Ship(pygame.sprite.Sprite):
         self.rect = self.image.get_rect()
         self.rect.x = xpos - width / 2
         self.rect.y = ypos - height / 2
+        self.rotation = 0

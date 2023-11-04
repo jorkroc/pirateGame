@@ -59,6 +59,8 @@ while running:
     for sprite in moving_objects:
         sprite.shiftPositionX(velocity[0])
         sprite.shiftPositionY(velocity[1])
+        if pygame.sprite.collide_rect(player, sprite):
+            print("collision")
 
     velocity[0] *= 0.9
     velocity[1] *= 0.9
