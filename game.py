@@ -6,6 +6,7 @@ from Island import Island
 from playership import PlayerShip
 from home import Home
 from jugger import Jugger
+from grape import Grape
 
 pygame.init()
 
@@ -74,6 +75,18 @@ for i in range(num_enemies//4):
         randX = random.randint(-map_width//10, map_width//10)*10
         randY = random.randint(-map_width//10, map_width//10)*10
         enemy = Jugger(randX, randY, enemy_speed)
+    all_sprites_list.add(enemy)
+    moving_objects.append(enemy)
+    enemies.append(enemy)
+    
+for i in range(num_enemies//4):
+    randX = random.randint(-map_width//10, map_width//10)*10
+    randY = random.randint(-map_width//10, map_width//10)*10
+    enemy = Grape(randX, randY, enemy_speed)
+    while pygame.sprite.collide_rect(home, enemy) or pygame.sprite.collide_rect(player,enemy):
+        randX = random.randint(-map_width//10, map_width//10)*10
+        randY = random.randint(-map_width//10, map_width//10)*10
+        enemy = Grape(randX, randY, enemy_speed)
     all_sprites_list.add(enemy)
     moving_objects.append(enemy)
     enemies.append(enemy)
