@@ -39,7 +39,7 @@ num_enemies = 50
 enemy_speed = 5
 enemy_range = 200
 
-font_size = 20
+font_size = 25
 font = pygame.font.SysFont('Courier New', font_size)
 black = (0, 0, 0)
 white = (255, 255, 255)
@@ -333,8 +333,9 @@ while running:
                     sprite2.shiftPositionX(-velocity[0])
                     sprite2.shiftPositionY(-velocity[1])
                 if sprite.treasure > 0:
-                    player.gold += 1
-                    sprite.treasure -= 1
+                    plunder_rate = 0.1
+                    player.gold += plunder_rate
+                    sprite.treasure -= plunder_rate
                 touchingIsland = True
             if (type(sprite) == Endwall):
                 for sprite in moving_objects:
@@ -449,6 +450,8 @@ while running:
     for i, stat in enumerate(show_stats):
         if stat == "health":
             writeToScreen(screen, "{}/{}".format(truncate(player.health), player.max_health), font_size, stat_x, dis * i + pad)
+        elif stat == "gold":
+            writeToScreen(screen, "{}: {}".format(stat, truncate(player.gold, 0)), font_size, stat_x, dis * i + pad)
         else:
             writeToScreen(screen, "{}: {}".format(stat, stat_map[stat]), font_size, stat_x, dis * i + pad)
     pygame.display.flip()
