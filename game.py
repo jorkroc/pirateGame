@@ -37,7 +37,7 @@ enemy_speed = 5
 enemy_range = 200
 
 gold = 0
-font_size = 30
+font_size = 20
 font = pygame.font.SysFont('Courier New', font_size)
 black = (0, 0, 0)
 white = (255, 255, 255)
@@ -53,6 +53,7 @@ pygame.display.set_caption(title)
 clock = pygame.time.Clock()
 running = True
 dt = 0
+bought = False
 
 shift = 1
 velocity = [0,0]
@@ -68,23 +69,25 @@ player.health = 100
 all_sprites_list.add(home)
 moving_objects.append(home)
 
-for i in range(20):
-    x = 80*i
-    border1 = Island(pygame.Vector2(x, 0), "black", 0)
-    border2 = Island(pygame.Vector2(x, 4000), "black", 0)
-    all_sprites_list.add(border1)
-    moving_objects.append(border1)
-    all_sprites_list.add(border2)
-    moving_objects.append(border2)
+for j in range (8):
+    for i in range(-100, 100):
+        x = 80*i
+        w = 80*j
+        border1 = Island(pygame.Vector2(x, -6500-w), "black", 0)
+        border2 = Island(pygame.Vector2(x, 7000+w), "black", 0)
+        all_sprites_list.add(border1)
+        moving_objects.append(border1)
+        all_sprites_list.add(border2)
+        moving_objects.append(border2)
 
-for i in range(20):
-    y = 80*i
-    border1 = Island(pygame.Vector2(0, y), "black", 0)
-    border2 = Island(pygame.Vector2(4000, y), "black", 0)
-    all_sprites_list.add(border1)
-    moving_objects.append(border1)
-    all_sprites_list.add(border2)
-    moving_objects.append(border2)
+    for i in range(-100, 100):
+        y = 80*i
+        border1 = Island(pygame.Vector2(-6000-w, y), "black", 0)
+        border2 = Island(pygame.Vector2(7500+w, y), "black", 0)
+        all_sprites_list.add(border1)
+        moving_objects.append(border1)
+        all_sprites_list.add(border2)
+        moving_objects.append(border2)
 
 for i in range(num_islands):
     randX = random.randint(-map_width//10, map_width//10)*10
@@ -148,10 +151,14 @@ for i in range(num_enemies//4):
     moving_objects.append(enemy)
     enemies.append(enemy)
 
+enemyGroup=pygame.sprite.Group()
+for enemy in enemies:
+    enemyGroup.add(enemy)
 finalboss = FinalBoss(finalbossX, finalbossY, enemy_speed)
 all_sprites_list.add(finalboss)
 moving_objects.append(finalboss)
 enemies.append(finalboss)
+
 
 ship_types = [Grape, Ship, Rammer, Jugger, FinalBoss]
 
@@ -165,13 +172,45 @@ def writeToScreen(screen, text, font_size, x, y, bg=True):
 def drawUpgradeMenu(screen, font_size):
     w, h = 600, 600
     sw, sh = screen.get_width(), screen.get_height()
+    tlx, tly = (sw - w) / 2, (sh - h) / 2
     bg = pygame.Surface([w, h])
     bg.set_alpha(128)
     bg.fill((255, 255, 255))
-    screen.blit(bg, ((sw - w) / 2, (sh - h) / 2))
-    writeToScreen(screen, "Love you <3", font_size, 400, 200, False)
+    screen.blit(bg, (tlx, tly))
+
+    bhx, bhy, pad, pad2 = 200, 200, 15, 5
+    stats = ["Max Health", "Speed", "Bullet Speed", "Rate of Fire", "Damage", "Bullet Range"]
+    for dis, stat in enumerate(stats):
+        bhtext = "Increase {}".format(stat)
+        bhw, bhh = len(bhtext) * font_size / 2, font_size
+        bhbut = pygame.Surface([bhw + pad * 2, bhh + pad * 2])
+        bhbut.fill((128, 128, 128))
+        bhbut.set_alpha(196)
+        bhtlx = tlx + bhx
+        bhtly = tly + bhy + dis * (font_size + pad * 2 + pad2)
+        screen.blit(bhbut, (bhtlx, bhtly))
+        writeToScreen(screen, bhtext, font_size, bhtlx + pad, bhtly + pad, False) 
+
     if pygame.mouse.get_pressed()[0]:
-        print(pygame.mouse.get_pos())
+        mx = pygame.mouse.get_pos()[0]
+        my = pygame.mouse.get_pos()[1]
+        for i, stat in enumerate(stats):
+            bhtext = "Increase {}".format(stat)
+            bhw, bhh = len(bhtext) * font_size / 2, font_size
+            if tlx + bhx <= mx <= tlx + bhx + bhw + 2 * pad and tly + bhy <= my <= tly + bhy + bhh + 2 * pad:
+                return i + 1
+
+    return 0
+
+def truncate(x, d=2):
+    y = x * 10**d
+    yi = (int)(y)
+    y = yi if y - yi < 0.5 else yi + 1
+    res = y / 10**d
+    resi = (int)(res)
+    if (int)(res) == res:
+        return resi
+    return res
 
 # PLAYER HAS TO BE THE LAST ADDED
 all_sprites_list.add(player)
@@ -186,13 +225,13 @@ def bulletFire():
         global bulletList
         global moving_objects
         global all_sprites_list
-        bullet = Bullet(0,0, 5, True)
+        bullet = Bullet(5, True, 5,0)
         bulletList.append(bullet)
         moving_objects.append(bullet)
         all_sprites_list.add(bullet)
-
 def bulletUpdate():
     global bulletList
+    global enemyGroup
     for bullet in bulletList:
         bullet.update()
         count=0
@@ -200,6 +239,17 @@ def bulletUpdate():
             count+=1
             bullet.kill()
             del bullet
+        elif bullet.active and bullet.friendly:
+            for enemy in pygame.sprite.spritecollide(bullet, enemyGroup, False):
+                #enemy.health-=bullet.damage
+                print("heya")
+                bullet.active=False
+                bullet.kill()
+                
+        elif bullet.active and not bullet.friendly and collide_rect(player, bullet):
+            player.health-=bullet.damage
+            bullet.active=False
+            bullet.kill()
         bulletList=bulletList[count:]
 while running:
 
@@ -240,6 +290,10 @@ while running:
                 sprite.shiftPositionX(-velocity[0])
                 sprite.shiftPositionY(-velocity[1])
                 sprite.speed *= -1
+                if player.ramming and not sprite.ramming:
+                    sprite.health -= 1
+                elif not player.ramming and sprite.ramming:
+                    player.health -= 1
             if type(sprite) == Island:
                 for sprite in moving_objects:
                     sprite.shiftPositionX(-velocity[0])
@@ -275,13 +329,20 @@ while running:
 
     pygame.draw.circle(minimap, "red", (int(0.1*(minimap_pos_x + (minimap_width / screen_width))), int(0.1*(minimap_pos_y - (minimap_height / screen_height)))), 5)
     screen.blit(minimap, minimap_rect) 
-
     if at_home:
-        drawUpgradeMenu(screen, font_size)
         player.health = player.max_health
- 
+        option = drawUpgradeMenu(screen, font_size)
+        if option == 1 and not bought:
+            gold -= 1
+            player.max_health += 1
+        
+        if option == 0:
+            bought = False
+        else:
+            bought = True
+    
     writeToScreen(screen, "Gold: {}".format(gold), font_size, screen_width - 250, 20)
-    writeToScreen(screen, "{}/{}".format(player.health, player.max_health), font_size, screen_width - 250, 60)
+    writeToScreen(screen, "{}/{}".format(truncate(player.health), player.max_health), font_size, screen_width - 250, 60)
 
     pygame.display.flip()
 
