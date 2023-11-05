@@ -155,6 +155,16 @@ def drawUpgradeMenu(screen, font_size):
     if pygame.mouse.get_pressed()[0]:
         print(pygame.mouse.get_pos())
 
+def truncate(x, d=2):
+    y = x * 10**d
+    yi = (int)(y)
+    y = yi if y - yi < 0.5 else yi + 1
+    res = y / 10**d
+    resi = (int)(res)
+    if (int)(res) == res:
+        return resi
+    return res
+
 # PLAYER HAS TO BE THE LAST ADDED
 all_sprites_list.add(player)
 
@@ -257,13 +267,13 @@ while running:
 
     pygame.draw.circle(minimap, "red", (int(0.1*(minimap_pos_x + (minimap_width / screen_width))), int(0.1*(minimap_pos_y - (minimap_height / screen_height)))), 5)
     screen.blit(minimap, minimap_rect) 
-
+    player.health -= 0.001
     if at_home:
         drawUpgradeMenu(screen, font_size)
         player.health = player.max_health
  
     writeToScreen(screen, "Gold: {}".format(gold), font_size, screen_width - 250, 20)
-    writeToScreen(screen, "{}/{}".format(player.health, player.max_health), font_size, screen_width - 250, 60)
+    writeToScreen(screen, "{}/{}".format(truncate(player.health), player.max_health), font_size, screen_width - 250, 60)
 
     pygame.display.flip()
 
