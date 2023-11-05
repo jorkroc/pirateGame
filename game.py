@@ -330,7 +330,7 @@ while running:
             running = False
 
     for sprite in moving_objects:
-        if type(sprite) == Ship:
+        if type(sprite) in ship_types:
             sprite.speed = abs(sprite.speed) 
 
     keys = pygame.key.get_pressed()
