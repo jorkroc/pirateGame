@@ -386,6 +386,24 @@ while running:
         else:
             bought = True
     
+    #enemy image directions
+
+    for sprite in all_sprites_list:
+        if type(sprite) is Jugger:
+            if (sprite.xpos < 1280/2):
+                sprite.image = pygame.image.load('images/jug.png').convert_alpha()
+            else:
+                sprite.image = pygame.image.load('images/jug_left.png').convert_alpha()
+        if type(sprite) is Grape:
+            if (sprite.xpos < 1280/2):
+                sprite.image = pygame.image.load('images/grapeshot.png').convert_alpha()
+            else:
+                sprite.image = pygame.image.load('images/grapeshot_left.png').convert_alpha()
+        if (type(sprite) is Rammer):
+            if (sprite.xpos < 1280/2):
+                sprite.image = pygame.image.load('images/ram.png').convert_alpha()
+            else:
+                sprite.image = pygame.image.load('images/ram_left.png').convert_alpha()
 
     # draw stats
     show_stats = ["gold", "health", "speed", "bullet speed", "rate of fire", "damage", "bullet range"]
