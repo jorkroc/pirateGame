@@ -17,10 +17,12 @@ class PlayerShip(ship.Ship):
         self.gold = 0
         self.territory = Territory.SAFE
         self.direction=0
+        self.damage=0
+        self.bullet_speed=5
     
 
 
-    
+
     def updateTerr(self,width,height):
         if width/4>self.xpos and height/3<self.ypos:
             self.territory=Territory.RAMMER

@@ -11,15 +11,20 @@ class Bullet(pygame.sprite.Sprite):
         self.rect.center = (1280/2, 720/2)
         self.life=0
         self.friendly=friendly
-        self.speed=speed
+        xspeeds=[0,-1.414,-2,-1.414,0,1.414,2,1.414]
+        yspeeds=[2,1.414,0,-1.414,-2,-1.414,0,1.414]
+        self.xspeed=xspeeds[direction]*speed
+        self.yspeed=yspeeds[direction]*speed
         self.damage=damage
         self.active=True
         self.direction=direction
 
 
     def update(self):
-        self.rect.x+=self.speed
-        self.position.x+=self.speed
+        self.rect.x+=self.xspeed
+        self.position.x+=self.xspeed
+        self.rect.y+=self.yspeed
+        self.position.y-=self.yspeed
         self.life+=1
 
 
