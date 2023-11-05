@@ -55,7 +55,7 @@ dt = 0
 shift = 1
 velocity = [0,0]
 
-all_sprites_list = pygame.sprite.Group() 
+all_sprites_list = pygame.sprite.Group()
 bulletList = []
 moving_objects = []
 
@@ -77,7 +77,7 @@ for i in range(num_islands):
         position = pygame.Vector2(randX, randY)*10
         island = Island(position, "yellow", random.randint(10, 100))
     all_sprites_list.add(island)
-    moving_objects.append(island) 
+    moving_objects.append(island)
 
 enemies = []
 for i in range(num_enemies%4):
@@ -202,6 +202,8 @@ while running:
 
     bulletUpdate()
 
+    touchingIsland = False
+
     at_home = False
     for sprite in moving_objects:
         sprite.shiftPositionX(velocity[0])
@@ -217,6 +219,7 @@ while running:
                     sprite.shiftPositionX(-velocity[0])
                     sprite.shiftPositionY(-velocity[1])
                 gold += 1
+                touchingIsland = True
             if type(sprite) == Home:
                 at_home = True
 
@@ -235,8 +238,9 @@ while running:
     all_sprites_list.draw(screen)
 
     #for minimap
-    minimap_pos_x -= velocity[0] * (minimap_width / screen_width)
-    minimap_pos_y -= velocity[1] * (minimap_width / screen_width)
+    if (not touchingIsland):
+        minimap_pos_x -= velocity[0] * (minimap_width / screen_width)
+        minimap_pos_y -= velocity[1] * (minimap_width / screen_width)
 
     pygame.draw.rect(minimap, "black", pygame.Rect(0, 33, 25, 67))  
     pygame.draw.rect(minimap, "green", pygame.Rect(60, 0, 40, 50))
