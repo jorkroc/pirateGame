@@ -278,17 +278,20 @@ def bulletUpdate():
         bullet.update()
         if bullet.friendly and bullet.life>10*player.bullet_range+10:
             count+=1
+            bullet.active=False
             bullet.kill()
             del bullet
             indices=indices+[index]
         elif bullet.life>100:
+            bullet.active=False
             bullet.kill()
             del bullet
             indices=indices+[index]
         elif bullet.active and bullet.friendly:
             for index, enemy in enumerate(pygame.sprite.spritecollide(bullet, enemyGroup, False)):
+                if not bullet.active:
+                    break
                 enemy.health-=bullet.damage
-                print(enemy.type)
                 if enemy.health<=0:
                     global enemies
                     enemy.kill()
@@ -302,6 +305,7 @@ def bulletUpdate():
                 bullet.kill()
                 del bullet
                 indices=indices+[index]
+                break
                 
         elif bullet.active and not bullet.friendly and pygame.sprite.collide_rect(player, bullet):
             player.health-=bullet.damage
