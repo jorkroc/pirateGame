@@ -66,6 +66,24 @@ player.health = 100
 all_sprites_list.add(home)
 moving_objects.append(home)
 
+for i in range(20):
+    x = 80*i
+    border1 = Island(pygame.Vector2(x, 0), "black", 0)
+    border2 = Island(pygame.Vector2(x, 4000), "black", 0)
+    all_sprites_list.add(border1)
+    moving_objects.append(border1)
+    all_sprites_list.add(border2)
+    moving_objects.append(border2)
+
+for i in range(20):
+    y = 80*i
+    border1 = Island(pygame.Vector2(0, y), "black", 0)
+    border2 = Island(pygame.Vector2(4000, y), "black", 0)
+    all_sprites_list.add(border1)
+    moving_objects.append(border1)
+    all_sprites_list.add(border2)
+    moving_objects.append(border2)
+
 for i in range(num_islands):
     randX = random.randint(-map_width//10, map_width//10)*10
     randY = random.randint(-map_width//10, map_width//10)*10
