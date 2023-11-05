@@ -131,6 +131,8 @@ all_sprites_list.add(finalboss)
 moving_objects.append(finalboss)
 enemies.append(finalboss)
 
+ship_types = [Grape, Ship, Rammer, Jugger, FinalBoss]
+
 def writeToScreen(screen, text, font_size, x, y):
     for i, char in enumerate(text):
         screen.blit(letters[char], (x + i * font_size / 2, y))
@@ -158,16 +160,19 @@ while running:
     for sprite in moving_objects:
         sprite.shiftPositionX(velocity[0])
         sprite.shiftPositionY(velocity[1])
-        if type(sprite) == Ship:
-            if player.health > sprite.health:
-                moving_objects.remove(sprite)
-                all_sprites_list.remove(sprite)
-            else:
-                print("player dead")
+        if pygame.sprite.collide_rect(player, sprite):
+            print(type(sprite))
+            if type(sprite) in ship_types:
+                if player.health > sprite.health:
+                    moving_objects.remove(sprite)
+                    all_sprites_list.remove(sprite)
+            if type(sprite) == Island:
+                gold += 1
+
 
     for enemy in enemies:
         if math.hypot((enemy.xpos-player.xpos), (enemy.ypos-player.ypos)) <= enemy_range:
-            print("Chase")
+            #print("Chase")
             enemy.chase(player)
     
 
