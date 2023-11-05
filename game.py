@@ -173,7 +173,7 @@ def writeToScreen(screen, text, font_size, x, y, bg=True):
             screen.blit(letters_nobg[char], (x + i * font_size / 2, y))
 
 def parseOption(option, player):
-    if player.gold <= 0:
+    if player.gold <= 1:
         return
     if option != 0:
         player.gold -= 1
