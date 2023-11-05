@@ -55,7 +55,7 @@ dt = 0
 shift = 1
 velocity = [0,0]
 
-all_sprites_list = pygame.sprite.Group() 
+all_sprites_list = pygame.sprite.Group()
 bulletList = []
 moving_objects = []
 
@@ -77,7 +77,7 @@ for i in range(num_islands):
         position = pygame.Vector2(randX, randY)*10
         island = Island(position, "yellow", random.randint(10, 100))
     all_sprites_list.add(island)
-    moving_objects.append(island) 
+    moving_objects.append(island)
 
 enemies = []
 for i in range(num_enemies%4):
@@ -139,9 +139,16 @@ def writeToScreen(screen, text, font_size, x, y):
     for i, char in enumerate(text):
         screen.blit(letters[char], (x + i * font_size / 2, y))
 
+def drawUpgradeMenu(screen, font_size):
+    w, h = 600, 600
+    sw, sh = screen.get_width(), screen.get_height()
+    bg = pygame.Surface([w, h])
+    bg.fill((255, 255, 255))
+    screen.blit(bg, ((sw - w) / 2, (sh - h) / 2))
+    writeToScreen(screen, "Love you <3", font_size, 400, 400)
+
 # PLAYER HAS TO BE THE LAST ADDED
 all_sprites_list.add(player)
-
 
 lastFire=-1
 def bulletFire():
@@ -153,7 +160,7 @@ def bulletFire():
         global bulletList
         global moving_objects
         global all_sprites_list
-        bullet = Bullet(0,0)
+        bullet = Bullet(0,0, 5, True)
         bulletList.append(bullet)
         moving_objects.append(bullet)
         all_sprites_list.add(bullet)
@@ -195,6 +202,9 @@ while running:
 
     bulletUpdate()
 
+    touchingIsland = False
+
+    at_home = False
     for sprite in moving_objects:
         sprite.shiftPositionX(velocity[0])
         sprite.shiftPositionY(velocity[1])
@@ -209,7 +219,9 @@ while running:
                     sprite.shiftPositionX(-velocity[0])
                     sprite.shiftPositionY(-velocity[1])
                 gold += 1
-
+                touchingIsland = True
+            if type(sprite) == Home:
+                at_home = True
 
     for enemy in enemies:
         if math.hypot((enemy.xpos-player.xpos), (enemy.ypos-player.ypos)) <= enemy_range:
@@ -226,8 +238,9 @@ while running:
     all_sprites_list.draw(screen)
 
     #for minimap
-    minimap_pos_x -= velocity[0] * (minimap_width / screen_width)
-    minimap_pos_y -= velocity[1] * (minimap_width / screen_width)
+    if (not touchingIsland):
+        minimap_pos_x -= velocity[0] * (minimap_width / screen_width)
+        minimap_pos_y -= velocity[1] * (minimap_width / screen_width)
 
     pygame.draw.rect(minimap, "black", pygame.Rect(0, 33, 25, 67))  
     pygame.draw.rect(minimap, "green", pygame.Rect(60, 0, 40, 50))
@@ -236,6 +249,9 @@ while running:
 
     pygame.draw.circle(minimap, "red", (int(0.1*(minimap_pos_x + (minimap_width / screen_width))), int(0.1*(minimap_pos_y - (minimap_height / screen_height)))), 5)
     screen.blit(minimap, minimap_rect) 
+
+    if at_home:
+        drawUpgradeMenu(screen, font_size)
  
     writeToScreen(screen, "Current Gold: {}".format(gold), font_size, screen_width - 300, 20)
 
