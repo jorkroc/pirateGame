@@ -35,6 +35,16 @@ num_enemies = 10
 enemy_speed = 5
 enemy_range = 200
 
+gold = 0
+font_size = 30
+font = pygame.font.SysFont('Courier New', font_size)
+black = (0, 0, 0)
+white = (255, 255, 255)
+letters = {}
+for i in range(32, 127):
+    char = chr(i)
+    letters[char] = font.render(char, False, black, white)
+
 screen = pygame.display.set_mode((screen_width, screen_height))
 pygame.display.set_caption(title)
 clock = pygame.time.Clock()
@@ -45,6 +55,7 @@ shift = 1
 velocity = [0,0]
 
 all_sprites_list = pygame.sprite.Group() 
+bulletList = []
 moving_objects = []
 
 player = PlayerShip(screen.get_width()/2, screen.get_height()/2)
@@ -121,8 +132,34 @@ all_sprites_list.add(finalboss)
 moving_objects.append(finalboss)
 enemies.append(finalboss)
 
+def writeToScreen(screen, text, font_size, x, y):
+    for i, char in enumerate(text):
+        screen.blit(letters[char], (x + i * font_size / 2, y))
+
 # PLAYER HAS TO BE THE LAST ADDED
 all_sprites_list.add(player)
+
+
+
+def bulletFire():
+    global bulletList
+    global moving_objects
+    global all_sprites_list
+    bullet = Bullet(0,0)
+    bulletList.append(bullet)
+    moving_objects.append(bullet)
+    all_sprites_list.add(bullet)
+
+def bulletUpdate():
+    global bulletList
+    for bullet in bulletList:
+        bullet.update()
+        count=0
+        if bullet.life>100:
+            count+=1
+            bullet.kill()
+            del bullet
+        bulletList=bulletList[count:]
 while running:
 
     for event in pygame.event.get():
@@ -147,9 +184,15 @@ while running:
     if keys[pygame.K_d]:
         velocity[0] -= shift
 
+    if keys[pygame.K_SPACE]:
+        bulletFire()
+
+    bulletUpdate()
+
     for sprite in moving_objects:
         sprite.shiftPositionX(velocity[0])
         sprite.shiftPositionY(velocity[1])
+<<<<<<< HEAD
         if pygame.sprite.collide_rect(player, sprite):
             sprite.shiftPositionX(-velocity[0])
             sprite.shiftPositionY(-velocity[1])
@@ -163,11 +206,20 @@ while running:
             #     print("nope")
 
 
+=======
+        if type(sprite) == Ship:
+            if player.health > sprite.health:
+                moving_objects.remove(sprite)
+                all_sprites_list.remove(sprite)
+            else:
+                print("player dead")
+>>>>>>> c50047da2e9d79ea4d1a79ec6b12207bd21bd049
 
     for enemy in enemies:
         if math.hypot((enemy.xpos-player.xpos), (enemy.ypos-player.ypos)) <= enemy_range:
             print("Chase")
             enemy.chase(player)
+    
 
     velocity[0] *= 0.9
     velocity[1] *= 0.9
@@ -183,6 +235,7 @@ while running:
     screen.blit(minimap, minimap_rect)
     
     all_sprites_list.draw(screen) 
+    writeToScreen(screen, "Current Gold: {}".format(gold), font_size, screen_width - 300, 20)
 
     pygame.display.flip()
 
