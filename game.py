@@ -345,7 +345,6 @@ while running:
                 at_home = True
 
     for enemy in enemies:
-        enemies2=[]
         print(math.hypot((enemy.xpos-player.xpos), (enemy.ypos-player.ypos)) <= enemy_range)
         if math.hypot((enemy.xpos-player.xpos), (enemy.ypos-player.ypos)) <= enemy_range:
             print("Chase")
@@ -360,7 +359,6 @@ while running:
         #     del enemy
         # else:
         #     enemies2=enemies2+[enemy]
-    enemies=enemies2
     
     
 
