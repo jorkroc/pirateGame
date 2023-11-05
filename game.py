@@ -159,7 +159,6 @@ for i in range(num_islands):
         randY = random.randint(-int(map_width/2), int(map_width/2))
         position = pygame.Vector2(randX, randY)
         island = Island(position, "yellow", random.randint(10, 100))
-    print(id(island))
     all_sprites_list.add(island)
     moving_objects.append(island)
 
@@ -201,7 +200,7 @@ def drawUpgradeMenu(screen, font_size):
     bg.fill((255, 255, 255))
     screen.blit(bg, (tlx, tly))
 
-    bhx, bhy, pad, pad2 = 200, 200, 15, 5
+    bhx, bhy, pad, pad2 = 100, 100, 15, 5
     stats = ["Max Health", "Speed", "Bullet Speed", "Rate of Fire", "Damage", "Bullet Range"]
     for dis, stat in enumerate(stats):
         bhtext = "Increase {}".format(stat)
@@ -346,7 +345,6 @@ while running:
                 at_home = True
 
     for enemy in enemies:
-        print(math.hypot((enemy.xpos-player.xpos), (enemy.ypos-player.ypos)) <= enemy_range)
         if math.hypot((enemy.xpos-player.xpos), (enemy.ypos-player.ypos)) <= enemy_range:
             print("Chase")
             enemy.chase(player)
