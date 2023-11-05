@@ -156,7 +156,7 @@ for i in range(num_islands):
     randX = random.randint(-int(map_width/2), int(map_width/2))/1.05 + 600
     randY = random.randint(-int(map_width/2), int(map_width/2))/1.05 + 300
     position = pygame.Vector2(randX, randY)
-    island = Island(position, "yellow", random.randint(0, max_loot))
+    island = Island(position, "yellow", random.randint(1, max_loot))
     while pygame.sprite.collide_rect(home, island) or pygame.sprite.collide_rect(player, island):
         randX = random.randint(-int(map_width/2), int(map_width/2))/1.05 + 600
         randY = random.randint(-int(map_width/2), int(map_width/2))/1.05 + 300
@@ -287,10 +287,8 @@ def bulletUpdate():
         elif bullet.active and bullet.friendly:
             for index, enemy in enumerate(pygame.sprite.spritecollide(bullet, enemyGroup, False)):
                 enemy.health-=bullet.damage
-                print(enemy.health)
                 if enemy.health<=0:
                     global enemies
-                    print("hey")
                     enemy.kill()
                     del enemy
                     enemies=enemies[:index]+enemies[index+1:]
@@ -358,7 +356,7 @@ while running:
             running = False
 
     for sprite in moving_objects:
-        if type(sprite) == Ship:
+        if type(sprite) in ship_types:
             sprite.speed = abs(sprite.speed) 
 
     keys = pygame.key.get_pressed()
@@ -431,7 +429,6 @@ while running:
             angle=(90-(angle*-1))+270
         angle=round(angle/45)%8
         player.updateDir(angle)
-        #print(angle)
 
     screen.fill("blue")
     minimap.fill((255, 255, 255))
