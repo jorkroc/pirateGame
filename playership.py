@@ -1,5 +1,6 @@
 import ship
 from enum import Enum
+import pygame
 
 class Territory(Enum):
     SAFE = 0
@@ -19,9 +20,8 @@ class PlayerShip(ship.Ship):
         self.direction=0
         self.damage=0
         self.bullet_speed=5
-    
-
-
+        self.speed = 1
+        self.image = pygame.image.load('images/boat.png').convert_alpha()
 
     def updateTerr(self,width,height):
         if width/4>self.xpos and height/3<self.ypos:
@@ -36,3 +36,7 @@ class PlayerShip(ship.Ship):
 
     def updateDir(self,direction):
         self.direction=direction
+        if (self.direction == 7) or (self.direction == 1) or (self.direction == 0):
+            self.image = pygame.image.load('images/boat.png').convert_alpha()
+        elif((self.direction == 3) or (self.direction == 4) or (self.direction == 5)):
+            self.image = pygame.image.load('images/boat_left.png').convert_alpha()

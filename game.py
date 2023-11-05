@@ -34,8 +34,8 @@ minimap_rect.topleft = (10, 10)
 minimap_pos_x = (screen_width/2 * (minimap_width / screen_width))/0.1
 minimap_pos_y = (screen_height/2 * (minimap_height / screen_height))/0.1
 
-num_islands = 500
-num_enemies = 100
+num_islands = 150
+num_enemies = 50
 enemy_speed = 5
 enemy_range = 200
 
@@ -57,9 +57,6 @@ running = True
 dt = 0
 bought = False
 
-shift = 1
-velocity = [0,0]
-
 all_sprites_list = pygame.sprite.Group()
 bulletList = []
 moving_objects = []
@@ -67,6 +64,8 @@ moving_objects = []
 player = PlayerShip(screen.get_width()/2, screen.get_height()/2)
 home = Home()
 player.health = 100
+shift = player.speed
+velocity = [0,0]
 
 all_sprites_list.add(home)
 moving_objects.append(home)
@@ -91,21 +90,10 @@ for j in range (8):
         all_sprites_list.add(border2)
         moving_objects.append(border2)
 
-for i in range(num_islands):
-    randX = random.randint(-map_width//10, map_width//10)*10
-    randY = random.randint(-map_width//10, map_width//10)*10
-    position = pygame.Vector2(randX, randY)*10
-    island = Island(position, "yellow", random.randint(10, 100))
-    while pygame.sprite.collide_rect(home, island) or pygame.sprite.collide_rect(player, island):
-        randX = random.randint(-map_width//10, map_width//10)*10
-        randY = random.randint(-map_width//10, map_width//10)*10
-        position = pygame.Vector2(randX, randY)*10
-        island = Island(position, "yellow", random.randint(10, 100))
-    all_sprites_list.add(island)
-    moving_objects.append(island)
+
 
 enemies = []
-for i in range(num_enemies%4):
+for i in range(num_enemies//4):
     randX = random.randint(-int(map_width/2), int(map_width/2))
     randY = random.randint(-int(map_height/2), int(map_height/2))
     enemy = Ship("orange", 40, 40, randX, randY, enemy_speed)
@@ -161,6 +149,19 @@ all_sprites_list.add(finalboss)
 moving_objects.append(finalboss)
 enemies.append(finalboss)
 
+for i in range(num_islands):
+    randX = random.randint(-int(map_width/2), int(map_width/2))
+    randY = random.randint(-int(map_width/2), int(map_width/2))
+    position = pygame.Vector2(randX, randY)
+    island = Island(position, "yellow", random.randint(10, 100))
+    while pygame.sprite.collide_rect(home, island) or pygame.sprite.collide_rect(player, island):
+        randX = random.randint(-int(map_width/2), int(map_width/2))
+        randY = random.randint(-int(map_width/2), int(map_width/2))
+        position = pygame.Vector2(randX, randY)
+        island = Island(position, "yellow", random.randint(10, 100))
+    all_sprites_list.add(island)
+    moving_objects.append(island)
+
 
 ship_types = [Grape, Ship, Rammer, Jugger, FinalBoss]
 
@@ -177,7 +178,7 @@ def parseOption(option, player):
     if option == 1:
         player.max_health += 1
     elif option == 2:
-        player.speed += 1
+        player.speed += 0.1
     elif option == 3:
         player.bullet_speed += 1
     elif option == 4:
@@ -239,7 +240,7 @@ def bulletFire():
     global lastFire
     newTime=time.time()
     elapsed=newTime-lastFire
-    if elapsed>1:
+    if elapsed>(0.9)**(player.rate_of_fire-1):
         lastFire=newTime
         global bulletList
         global moving_objects
@@ -255,25 +256,33 @@ def bulletFire():
 def bulletUpdate():
     global bulletList
     global enemyGroup
+    count=0
     for bullet in bulletList:
         bullet.update()
         count=0
-        if bullet.life>100:
+        if bullet.life>10*player.bullet_range+10:
             count+=1
             bullet.kill()
             del bullet
         elif bullet.active and bullet.friendly:
-            for enemy in pygame.sprite.spritecollide(bullet, enemyGroup, False):
-                #enemy.health-=bullet.damage
-                print("heya")
+            for index, enemy in enumerate(pygame.sprite.spritecollide(bullet, enemyGroup, False)):
+                enemy.health-=bullet.damage
+                print(enemy.health)
+                if enemy.health<=0:
+                    global enemies
+                    print("hey")
+                    enemy.kill()
+                    del enemy
+                    enemies=enemies[:index]+enemies[index+1:]
+                    break
                 bullet.active=False
                 bullet.kill()
                 
-        elif bullet.active and not bullet.friendly and collide_rect(player, bullet):
+        elif bullet.active and not bullet.friendly and pygame.sprite.collide_rect(player, bullet):
             player.health-=bullet.damage
             bullet.active=False
             bullet.kill()
-        bulletList=bulletList[count:]
+    bulletList=bulletList[count:]
 
 
 while running:
@@ -285,8 +294,6 @@ while running:
     for sprite in moving_objects:
         if type(sprite) == Ship:
             sprite.speed = abs(sprite.speed) 
-
-    pygame.draw.circle(screen, island.color, island.position, 30)
 
     keys = pygame.key.get_pressed()
     if keys[pygame.K_w]:
@@ -309,7 +316,6 @@ while running:
     for sprite in moving_objects:
         sprite.shiftPositionX(velocity[0])
         sprite.shiftPositionY(velocity[1])
-
         if pygame.sprite.collide_rect(player, sprite):
             if type(sprite) in ship_types:
                 sprite.shiftPositionX(-velocity[0])
@@ -323,7 +329,7 @@ while running:
                 for sprite in moving_objects:
                     sprite.shiftPositionX(-velocity[0])
                     sprite.shiftPositionY(-velocity[1])
-                player.gold += 1
+                print(type(sprite))
                 touchingIsland = True
             if (type(sprite) == Endwall):
                 for sprite in moving_objects:
@@ -334,9 +340,23 @@ while running:
                 at_home = True
 
     for enemy in enemies:
+        enemies2=[]
+        print(math.hypot((enemy.xpos-player.xpos), (enemy.ypos-player.ypos)) <= enemy_range)
         if math.hypot((enemy.xpos-player.xpos), (enemy.ypos-player.ypos)) <= enemy_range:
-            #print("Chase")
+            print("Chase")
             enemy.chase(player)
+        # print(int(enemy.health))
+        # print(int(enemy.health)<=0)
+        # print(int(enemy.health))
+        # if enemy.health<=0:
+        #     for u in range(99):
+        #         print("baba")
+        #     enemy.kill()
+        #     del enemy
+        # else:
+        #     enemies2=enemies2+[enemy]
+    enemies=enemies2
+    
     
 
     velocity[0] *= 0.9
@@ -372,6 +392,7 @@ while running:
     pygame.draw.rect(minimap, "green", pygame.Rect(60, 0, 40, 50))
     pygame.draw.rect(minimap, "purple", pygame.Rect(40, 67, 60, 33))
     pygame.draw.rect(minimap, "grey", pygame.Rect(25, 10, 10, 10))
+    pygame.draw.rect(minimap, "blue", pygame.Rect(42, 45, 10, 10))
 
     pygame.draw.circle(minimap, "red", (int(0.1*(minimap_pos_x + (minimap_width / screen_width))), int(0.1*(minimap_pos_y - (minimap_height / screen_height)))), 5)
     screen.blit(minimap, minimap_rect) 
@@ -386,12 +407,34 @@ while running:
         else:
             bought = True
     
+    #enemy image directions
 
+    for sprite in all_sprites_list:
+        if type(sprite) is Jugger:
+            if (sprite.xpos < 1280/2):
+                sprite.image = pygame.image.load('images/jug.png').convert_alpha()
+            else:
+                sprite.image = pygame.image.load('images/jug_left.png').convert_alpha()
+        if type(sprite) is Grape:
+            if (sprite.xpos < 1280/2):
+                sprite.image = pygame.image.load('images/grapeshot.png').convert_alpha()
+            else:
+                sprite.image = pygame.image.load('images/grapeshot_left.png').convert_alpha()
+        if (type(sprite) is Rammer):
+            if (sprite.xpos < 1280/2):
+                sprite.image = pygame.image.load('images/ram.png').convert_alpha()
+            else:
+                sprite.image = pygame.image.load('images/ram_left.png').convert_alpha()
+        if (type(sprite) is Ship):
+            if (sprite.xpos < 1280/2):
+                sprite.image = pygame.image.load('images/stand_boat.png').convert_alpha()
+            else:
+                sprite.image = pygame.image.load('images/stand_boat_left.png').convert_alpha()
     # draw stats
     show_stats = ["gold", "health", "speed", "bullet speed", "rate of fire", "damage", "bullet range"]
     stat_map = {
         "gold":player.gold,
-        "speed":player.speed,
+        "speed":round(player.speed,1),
         "bullet speed":player.bullet_speed,
         "rate of fire":player.rate_of_fire,
         "damage":player.damage,
@@ -408,5 +451,7 @@ while running:
     pygame.display.flip()
 
     dt = clock.tick(60) / 1000
+
+    shift = player.speed
 
 pygame.quit()
