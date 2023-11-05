@@ -33,6 +33,8 @@ class Bullet(pygame.sprite.Sprite):
         self.damage=damage
         self.active=True
         self.direction=direction
+        self.image = pygame.image.load('images/bullet.png').convert_alpha()
+
 
 
     def update(self):
