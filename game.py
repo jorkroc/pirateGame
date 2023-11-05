@@ -16,12 +16,12 @@ pygame.init()
 
 screen_width = 1280
 screen_height = 720
-map_width = 1000
-map_height = 1000
+map_width = 8000
+map_height = 8000
 title = "Pirate Game"
 
-finalbossX = 100
-finalbossY = 100
+finalbossX = -200
+finalbossY = 200 
 
 minimap_width = 100
 minimap_height = 100
@@ -32,7 +32,7 @@ minimap_pos_x = (screen_width/2 * (minimap_width / screen_width))/0.1
 minimap_pos_y = (screen_height/2 * (minimap_height / screen_height))/0.1
 
 num_islands = 500
-num_enemies = 10
+num_enemies = 100
 enemy_speed = 5
 enemy_range = 200
 
@@ -101,48 +101,48 @@ for i in range(num_islands):
 
 enemies = []
 for i in range(num_enemies%4):
-    randX = random.randint(-map_width//10, map_width//10)*10
-    randY = random.randint(-map_width//10, map_width//10)*10
+    randX = random.randint(-int(map_width/2), int(map_width/2))
+    randY = random.randint(-int(map_height/2), int(map_height/2))
     enemy = Ship("orange", 40, 40, randX, randY, enemy_speed)
     while pygame.sprite.collide_rect(home, enemy) or pygame.sprite.collide_rect(player,enemy):
-        randX = random.randint(-map_width//10, map_width//10)*10
-        randY = random.randint(-map_width//10, map_width//10)*10
+        randX = random.randint(-int(map_width/2), int(map_width/2))
+        randY = random.randint(-int(map_height/2), int(map_height/2))
         enemy = Ship("orange", 40, 40, randX, randY, enemy_speed)
     all_sprites_list.add(enemy)
     moving_objects.append(enemy)
     enemies.append(enemy)
     
 for i in range(num_enemies//4):
-    randX = random.randint(-map_width//10, map_width//10)*10
-    randY = random.randint(-map_width//10, map_width//10)*10
-    enemy = Jugger(randX, randY, enemy_speed)
+    randX = random.randint(int(map_width/2)-int(map_width*0.4), int(map_width/2))
+    randY = random.randint(0, int(map_height/2))
+    enemy = Grape(randX, randY, enemy_speed)
     while pygame.sprite.collide_rect(home, enemy) or pygame.sprite.collide_rect(player,enemy):
-        randX = random.randint(-map_width//10, map_width//10)*10
-        randY = random.randint(-map_width//10, map_width//10)*10
-        enemy = Jugger(randX, randY, enemy_speed) 
-    all_sprites_list.add(enemy)
-    moving_objects.append(enemy)
-    enemies.append(enemy)
-
-for i in range(num_enemies//4):
-    randX = random.randint(-map_width//10, map_width//10)*10
-    randY = random.randint(-map_width//10, map_width//10)*10
-    enemy = Grape(randX, randY, enemy_speed) 
-    while pygame.sprite.collide_rect(home, enemy) or pygame.sprite.collide_rect(player,enemy):
-        randX = random.randint(-map_width//10, map_width//10)*10
-        randY = random.randint(-map_width//10, map_width//10)*10
+        randX = random.randint(int(map_width/2)-int(map_width*0.4), int(map_width/2))
+        randY = random.randint(0, int(map_height/2))
         enemy = Grape(randX, randY, enemy_speed) 
     all_sprites_list.add(enemy)
     moving_objects.append(enemy)
     enemies.append(enemy)
 
 for i in range(num_enemies//4):
-    randX = random.randint(-map_width//10, map_width//10)*10
-    randY = random.randint(-map_width//10, map_width//10)*10
+    randX = random.randint(int(map_width/2)-int(0.6*map_width), int(map_width/2))
+    randY = random.randint(-int(map_height/2),-int(map_height/2)+int(map_height/3))
+    enemy = Jugger(randX, randY, enemy_speed) 
+    while pygame.sprite.collide_rect(home, enemy) or pygame.sprite.collide_rect(player,enemy):
+        randX = random.randint(int(map_width/2)-int(0.6*map_width), int(map_width/2))
+        randY = random.randint(-int(map_height/2), -int(map_height/2)+int(map_height/3))
+        enemy = Jugger(randX, randY, enemy_speed) 
+    all_sprites_list.add(enemy)
+    moving_objects.append(enemy)
+    enemies.append(enemy)
+
+for i in range(num_enemies//4):
+    randX = random.randint(-int(map_width/2), -int(map_width/2)+int(map_width/4))
+    randY = random.randint(-int(map_height/2), int(map_height/2)-int(map_height/3))
     enemy = Rammer(randX, randY, enemy_speed) 
     while pygame.sprite.collide_rect(home, enemy) or pygame.sprite.collide_rect(player,enemy):
-        randX = random.randint(-map_width//10, map_width//10)*10
-        randY = random.randint(-map_width//10, map_width//10)*10
+        randX = random.randint(-int(map_width/2), -int(map_width/2)+int(map_width/4))
+        randY = random.randint(-int(map_height/2), int(map_height/2)-int(map_height/3))
         enemy = Rammer(randX, randY, enemy_speed) 
     all_sprites_list.add(enemy)
     moving_objects.append(enemy)
