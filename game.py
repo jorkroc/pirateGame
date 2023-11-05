@@ -53,6 +53,7 @@ pygame.display.set_caption(title)
 clock = pygame.time.Clock()
 running = True
 dt = 0
+bought = False
 
 shift = 1
 velocity = [0,0]
@@ -169,13 +170,38 @@ def writeToScreen(screen, text, font_size, x, y, bg=True):
 def drawUpgradeMenu(screen, font_size):
     w, h = 600, 600
     sw, sh = screen.get_width(), screen.get_height()
+    tlx, tly = (sw - w) / 2, (sh - h) / 2
     bg = pygame.Surface([w, h])
     bg.set_alpha(128)
     bg.fill((255, 255, 255))
-    screen.blit(bg, ((sw - w) / 2, (sh - h) / 2))
-    writeToScreen(screen, "Love you <3", font_size, 400, 200, False)
+
+    bhx, bhy = 200, 200
+    pad = 15
+    buy_health_text = "Increase Max Health"
+    bhw, bhh = len(buy_health_text) * font_size / 2, font_size
+    buy_health_but = pygame.Surface([bhw + pad * 2, bhh + pad * 2])
+    buy_health_but.fill((128, 128, 128))
+    buy_health_but.set_alpha(196)
+
+    screen.blit(bg, (tlx, tly))
+    screen.blit(buy_health_but, (tlx + bhx - pad, tly + bhy - pad))
+    writeToScreen(screen, buy_health_text, font_size, tlx + bhx, tly + bhy, False) 
     if pygame.mouse.get_pressed()[0]:
-        print(pygame.mouse.get_pos())
+        mx = pygame.mouse.get_pos()[0]
+        my = pygame.mouse.get_pos()[1]
+        if tlx + bhx <= mx <= tlx + bhx + bhw and tly + bhy <= my <= tly + bhy + bhh:
+           return 1
+    return 0
+
+def truncate(x, d=2):
+    y = x * 10**d
+    yi = (int)(y)
+    y = yi if y - yi < 0.5 else yi + 1
+    res = y / 10**d
+    resi = (int)(res)
+    if (int)(res) == res:
+        return resi
+    return res
 
 # PLAYER HAS TO BE THE LAST ADDED
 all_sprites_list.add(player)
@@ -255,6 +281,10 @@ while running:
                 sprite.shiftPositionX(-velocity[0])
                 sprite.shiftPositionY(-velocity[1])
                 sprite.speed *= -1
+                if player.ramming and not sprite.ramming:
+                    sprite.health -= 1
+                elif not player.ramming and sprite.ramming:
+                    player.health -= 1
             if type(sprite) == Island:
                 for sprite in moving_objects:
                     sprite.shiftPositionX(-velocity[0])
@@ -290,13 +320,21 @@ while running:
 
     pygame.draw.circle(minimap, "red", (int(0.1*(minimap_pos_x + (minimap_width / screen_width))), int(0.1*(minimap_pos_y - (minimap_height / screen_height)))), 5)
     screen.blit(minimap, minimap_rect) 
-
+    player.health -= 0.001
     if at_home:
-        drawUpgradeMenu(screen, font_size)
         player.health = player.max_health
- 
+        option = drawUpgradeMenu(screen, font_size)
+        if option == 1 and not bought:
+            gold -= 1
+            player.max_health += 1
+        
+        if option == 0:
+            bought = False
+        else:
+            bought = True
+    
     writeToScreen(screen, "Gold: {}".format(gold), font_size, screen_width - 250, 20)
-    writeToScreen(screen, "{}/{}".format(player.health, player.max_health), font_size, screen_width - 250, 60)
+    writeToScreen(screen, "{}/{}".format(truncate(player.health), player.max_health), font_size, screen_width - 250, 60)
 
     pygame.display.flip()
 
