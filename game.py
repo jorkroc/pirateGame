@@ -10,6 +10,7 @@ from grape import Grape
 from jugger import Jugger
 from rammer import Rammer
 from finalboss import FinalBoss
+import time
 
 pygame.init()
 
@@ -140,15 +141,20 @@ def writeToScreen(screen, text, font_size, x, y):
 all_sprites_list.add(player)
 
 
-
+lastFire=-1
 def bulletFire():
-    global bulletList
-    global moving_objects
-    global all_sprites_list
-    bullet = Bullet(0,0)
-    bulletList.append(bullet)
-    moving_objects.append(bullet)
-    all_sprites_list.add(bullet)
+    global lastFire
+    newTime=time.time()
+    elapsed=newTime-lastFire
+    if elapsed>1:
+        lastFire=newTime
+        global bulletList
+        global moving_objects
+        global all_sprites_list
+        bullet = Bullet(0,0)
+        bulletList.append(bullet)
+        moving_objects.append(bullet)
+        all_sprites_list.add(bullet)
 
 def bulletUpdate():
     global bulletList
