@@ -372,6 +372,7 @@ while running:
     pygame.draw.rect(minimap, "green", pygame.Rect(60, 0, 40, 50))
     pygame.draw.rect(minimap, "purple", pygame.Rect(40, 67, 60, 33))
     pygame.draw.rect(minimap, "grey", pygame.Rect(25, 10, 10, 10))
+    pygame.draw.rect(minimap, "blue", pygame.Rect(42, 45, 10, 10))
 
     pygame.draw.circle(minimap, "red", (int(0.1*(minimap_pos_x + (minimap_width / screen_width))), int(0.1*(minimap_pos_y - (minimap_height / screen_height)))), 5)
     screen.blit(minimap, minimap_rect) 
