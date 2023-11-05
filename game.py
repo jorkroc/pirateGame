@@ -15,7 +15,7 @@ from waves import Waves
 import time
 import numpy as np
 
-
+wait=False
 pygame.init()
 
 screen_width = 1280
@@ -158,6 +158,7 @@ for enemy in enemies:
     enemyGroup.add(enemy)
 finalboss = FinalBoss(finalbossX, finalbossY, enemy_speed)
 all_sprites_list.add(finalboss)
+enemyGroup.add(finalboss)
 moving_objects.append(finalboss)
 enemies.append(finalboss)
 
@@ -287,9 +288,13 @@ def bulletUpdate():
         elif bullet.active and bullet.friendly:
             for index, enemy in enumerate(pygame.sprite.spritecollide(bullet, enemyGroup, False)):
                 enemy.health-=bullet.damage
+                print(enemy.type)
                 if enemy.health<=0:
                     global enemies
                     enemy.kill()
+                    player.gold+=20
+                    enemy.living=False
+                    enemy.ramming=False
                     del enemy
                     enemies=enemies[:index]+enemies[index+1:]
                     break
@@ -409,7 +414,7 @@ while running:
     for enemy in all_enemies:
         if math.hypot((enemy.xpos-player.xpos), (enemy.ypos-player.ypos)) <= enemy_range:
             enemy.chase(player)
-        if abs(1280/2-enemy.xpos)<400 and abs(720/2-enemy.ypos)<400:
+        if abs(1280/2-enemy.xpos)<400 and abs(720/2-enemy.ypos)<400 and enemy.living:
             enemyFire(enemy)
 
     velocity[0] *= 0.9
@@ -507,6 +512,7 @@ while running:
         player.image = pygame.image.load('images/boat_dead.png').convert_alpha()
         writeToScreen(screen, "You're Dead :(", font_size, screen_width / 2 - 80, screen_height / 2 + 50)
         running=False
+        wait=True
     if finalboss.health <= 0:
         writeToScreen(screen, "You Win!", font_size, screen_width / 2 - 60, screen_height / 2 + 50)
     
@@ -520,5 +526,7 @@ while running:
     dt = clock.tick(60) / 1000
 
     shift = player.speed
-time.sleep(5)
+if wait:
+    time.sleep(5)
+
 pygame.quit()
