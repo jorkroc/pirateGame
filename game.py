@@ -38,8 +38,7 @@ num_enemies = 10
 enemy_speed = 5
 enemy_range = 200
 
-gold = 0
-font_size = 30
+font_size = 20
 font = pygame.font.SysFont('Courier New', font_size)
 black = (0, 0, 0)
 white = (255, 255, 255)
@@ -71,23 +70,25 @@ player.health = 100
 all_sprites_list.add(home)
 moving_objects.append(home)
 
-for i in range(20):
-    x = 80*i
-    border1 = Island(pygame.Vector2(x, 0), "black", 0)
-    border2 = Island(pygame.Vector2(x, 4000), "black", 0)
-    all_sprites_list.add(border1)
-    moving_objects.append(border1)
-    all_sprites_list.add(border2)
-    moving_objects.append(border2)
+for j in range (8):
+    for i in range(-100, 100):
+        x = 80*i
+        w = 80*j
+        border1 = Island(pygame.Vector2(x, -6500-w), "black", 0)
+        border2 = Island(pygame.Vector2(x, 7000+w), "black", 0)
+        all_sprites_list.add(border1)
+        moving_objects.append(border1)
+        all_sprites_list.add(border2)
+        moving_objects.append(border2)
 
-for i in range(20):
-    y = 80*i
-    border1 = Island(pygame.Vector2(0, y), "black", 0)
-    border2 = Island(pygame.Vector2(4000, y), "black", 0)
-    all_sprites_list.add(border1)
-    moving_objects.append(border1)
-    all_sprites_list.add(border2)
-    moving_objects.append(border2)
+    for i in range(-100, 100):
+        y = 80*i
+        border1 = Island(pygame.Vector2(-6000-w, y), "black", 0)
+        border2 = Island(pygame.Vector2(7500+w, y), "black", 0)
+        all_sprites_list.add(border1)
+        moving_objects.append(border1)
+        all_sprites_list.add(border2)
+        moving_objects.append(border2)
 
 for i in range(num_islands):
     randX = random.randint(-map_width//10, map_width//10)*10
@@ -169,6 +170,23 @@ def writeToScreen(screen, text, font_size, x, y, bg=True):
         else:
             screen.blit(letters_nobg[char], (x + i * font_size / 2, y))
 
+def parseOption(option, player):
+    if option != 0:
+        player.gold -= 1
+    if option == 1:
+        player.max_health += 1
+    elif option == 2:
+        player.speed += 1
+    elif option == 3:
+        player.bullet_speed += 1
+    elif option == 4:
+        player.rate_of_fire += 1
+    elif option == 5:
+        player.damage += 1
+    elif option == 6:
+        player.bullet_range += 1
+    
+
 def drawUpgradeMenu(screen, font_size):
     w, h = 600, 600
     sw, sh = screen.get_width(), screen.get_height()
@@ -176,26 +194,30 @@ def drawUpgradeMenu(screen, font_size):
     bg = pygame.Surface([w, h])
     bg.set_alpha(128)
     bg.fill((255, 255, 255))
-
-    def button(bx, by, pad, text):
-        bw, bh = len(text) * font_size / 2, font_size
-
-    bhx, bhy = 200, 200
-    pad = 15
-    buy_health_text = "Increase Max Health"
-    bhw, bhh = len(buy_health_text) * font_size / 2, font_size
-    buy_health_but = pygame.Surface([bhw + pad * 2, bhh + pad * 2])
-    buy_health_but.fill((128, 128, 128))
-    buy_health_but.set_alpha(196)
-
     screen.blit(bg, (tlx, tly))
-    screen.blit(buy_health_but, (tlx + bhx - pad, tly + bhy - pad))
-    writeToScreen(screen, buy_health_text, font_size, tlx + bhx, tly + bhy, False) 
+
+    bhx, bhy, pad, pad2 = 200, 200, 15, 5
+    stats = ["Max Health", "Speed", "Bullet Speed", "Rate of Fire", "Damage", "Bullet Range"]
+    for dis, stat in enumerate(stats):
+        bhtext = "Increase {}".format(stat)
+        bhw, bhh = len(bhtext) * font_size / 2, font_size
+        bhbut = pygame.Surface([bhw + pad * 2, bhh + pad * 2])
+        bhbut.fill((128, 128, 128))
+        bhbut.set_alpha(196)
+        bhtlx = tlx + bhx
+        bhtly = tly + bhy + dis * (font_size + pad * 2 + pad2)
+        screen.blit(bhbut, (bhtlx, bhtly))
+        writeToScreen(screen, bhtext, font_size, bhtlx + pad, bhtly + pad, False) 
+
     if pygame.mouse.get_pressed()[0]:
         mx = pygame.mouse.get_pos()[0]
         my = pygame.mouse.get_pos()[1]
-        if tlx + bhx <= mx <= tlx + bhx + bhw and tly + bhy <= my <= tly + bhy + bhh:
-           return 1
+        for i, stat in enumerate(stats):
+            bhtext = "Increase {}".format(stat)
+            bhw, bhh = len(bhtext) * font_size / 2, font_size
+            if tlx + bhx <= mx <= tlx + bhx + bhw + 2 * pad and tly + bhy <= my <= tly + bhy + i * (font_size + pad * 2 + pad2) + bhh + pad * 2:
+                return i + 1
+
     return 0
 
 def truncate(x, d=2):
@@ -294,7 +316,7 @@ while running:
                 for sprite in moving_objects:
                     sprite.shiftPositionX(-velocity[0])
                     sprite.shiftPositionY(-velocity[1])
-                gold += 1
+                player.gold += 1
                 touchingIsland = True
             if type(sprite) == Home:
                 at_home = True
@@ -343,18 +365,33 @@ while running:
     if at_home:
         player.health = player.max_health
         option = drawUpgradeMenu(screen, font_size)
-        if option == 1 and not bought:
-            gold -= 1
-            player.max_health += 1
+        if not bought:
+            parseOption(option, player)
         
         if option == 0:
             bought = False
         else:
             bought = True
     
-    writeToScreen(screen, "Gold: {}".format(gold), font_size, screen_width - 250, 20)
-    writeToScreen(screen, "{}/{}".format(truncate(player.health), player.max_health), font_size, screen_width - 250, 60)
 
+    # draw stats
+    show_stats = ["gold", "health", "speed", "bullet speed", "rate of fire", "damage", "bullet range"]
+    stat_map = {
+        "gold":player.gold,
+        "speed":player.speed,
+        "bullet speed":player.bullet_speed,
+        "rate of fire":player.rate_of_fire,
+        "damage":player.damage,
+        "bullet range":player.bullet_range
+    }
+    stat_x = screen_width - 250
+    pad = 20
+    dis = font_size + pad
+    for i, stat in enumerate(show_stats):
+        if stat == "health":
+            writeToScreen(screen, "{}/{}".format(truncate(player.health), player.max_health), font_size, stat_x, dis * i + pad)
+        else:
+            writeToScreen(screen, "{}: {}".format(stat, stat_map[stat]), font_size, stat_x, dis * i + pad)
     pygame.display.flip()
 
     dt = clock.tick(60) / 1000
