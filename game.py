@@ -95,15 +95,7 @@ for i in range(num_enemies%4):
 for i in range(num_enemies//4):
     randX = random.randint(-map_width//10, map_width//10)*10
     randY = random.randint(-map_width//10, map_width//10)*10
-<<<<<<< HEAD
-<<<<<<< HEAD
-    enemy = Jugger(randX, randY, enemy_speed) 
-=======
-    enemy = Jagger(randX, randY, enemy_speed)
->>>>>>> parent of e83d837 ('Jagger')
-=======
     enemy = Jugger(randX, randY, enemy_speed)
->>>>>>> 32d6834a9626a4c3935a75c79c9ffa278060d5d4
     while pygame.sprite.collide_rect(home, enemy) or pygame.sprite.collide_rect(player,enemy):
         randX = random.randint(-map_width//10, map_width//10)*10
         randY = random.randint(-map_width//10, map_width//10)*10
@@ -242,7 +234,6 @@ while running:
     pygame.draw.rect(minimap, "purple", pygame.Rect(40, 67, 60, 33))
     pygame.draw.rect(minimap, "grey", pygame.Rect(25, 10, 10, 10))
 
-    if (not )
     pygame.draw.circle(minimap, "red", (int(0.1*(minimap_pos_x + (minimap_width / screen_width))), int(0.1*(minimap_pos_y - (minimap_height / screen_height)))), 5)
     screen.blit(minimap, minimap_rect) 
  
