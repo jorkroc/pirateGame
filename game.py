@@ -305,7 +305,6 @@ while running:
 
     pygame.draw.circle(minimap, "red", (int(0.1*(minimap_pos_x + (minimap_width / screen_width))), int(0.1*(minimap_pos_y - (minimap_height / screen_height)))), 5)
     screen.blit(minimap, minimap_rect) 
-    player.health -= 0.001
     if at_home:
         player.health = player.max_health
         option = drawUpgradeMenu(screen, font_size)
