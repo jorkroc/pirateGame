@@ -35,7 +35,7 @@ minimap_pos_x = (screen_width/2 * (minimap_width / screen_width))/0.1
 minimap_pos_y = (screen_height/2 * (minimap_height / screen_height))/0.1
 
 num_islands = 150
-num_enemies = 100
+num_enemies = 50
 enemy_speed = 5
 enemy_range = 200
 
@@ -342,8 +342,9 @@ while running:
 
     for enemy in enemies:
         enemies2=[]
+        print(math.hypot((enemy.xpos-player.xpos), (enemy.ypos-player.ypos)) <= enemy_range)
         if math.hypot((enemy.xpos-player.xpos), (enemy.ypos-player.ypos)) <= enemy_range:
-            #print("Chase")
+            print("Chase")
             enemy.chase(player)
         # print(int(enemy.health))
         # print(int(enemy.health)<=0)
