@@ -34,7 +34,7 @@ minimap_rect.topleft = (10, 10)
 minimap_pos_x = (screen_width/2 * (minimap_width / screen_width))/0.1
 minimap_pos_y = (screen_height/2 * (minimap_height / screen_height))/0.1
 
-num_islands = 500
+num_islands = 200
 num_enemies = 100
 enemy_speed = 5
 enemy_range = 200
@@ -255,6 +255,7 @@ def bulletFire():
 def bulletUpdate():
     global bulletList
     global enemyGroup
+    count=0
     for bullet in bulletList:
         bullet.update()
         count=0
@@ -264,7 +265,7 @@ def bulletUpdate():
             del bullet
         elif bullet.active and bullet.friendly:
             for enemy in pygame.sprite.spritecollide(bullet, enemyGroup, False):
-                #enemy.health-=bullet.damage
+                enemy.health-=bullet.damage
                 print("heya")
                 bullet.active=False
                 bullet.kill()
@@ -273,7 +274,7 @@ def bulletUpdate():
             player.health-=bullet.damage
             bullet.active=False
             bullet.kill()
-        bulletList=bulletList[count:]
+    bulletList=bulletList[count:]
 
 
 while running:
@@ -334,9 +335,17 @@ while running:
                 at_home = True
 
     for enemy in enemies:
+        enemies2=[]
         if math.hypot((enemy.xpos-player.xpos), (enemy.ypos-player.ypos)) <= enemy_range:
             #print("Chase")
             enemy.chase(player)
+        if enemy.health<=0:
+            enemy.kill()
+            del enemy
+        else:
+            enemies2=enemies2+[enemy]
+    enemies=enemies2
+    
     
 
     velocity[0] *= 0.9
