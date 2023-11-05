@@ -160,7 +160,7 @@ def bulletFire():
         global bulletList
         global moving_objects
         global all_sprites_list
-        bullet = Bullet(0,0)
+        bullet = Bullet(0,0, 5, True)
         bulletList.append(bullet)
         moving_objects.append(bullet)
         all_sprites_list.add(bullet)
@@ -241,7 +241,7 @@ while running:
     pygame.draw.rect(minimap, "black", pygame.Rect(0, 33, 25, 67))  
     pygame.draw.rect(minimap, "green", pygame.Rect(60, 0, 40, 50))
     pygame.draw.rect(minimap, "purple", pygame.Rect(40, 67, 60, 33))
-    pygame.draw.rect(minimap, "grey", pygame.Rect(20, 10, 20, 10))
+    pygame.draw.rect(minimap, "grey", pygame.Rect(25, 10, 10, 10))
 
     pygame.draw.circle(minimap, "red", (int(0.1*(minimap_pos_x + (minimap_width / screen_width))), int(0.1*(minimap_pos_y - (minimap_height / screen_height)))), 5)
     screen.blit(minimap, minimap_rect) 
