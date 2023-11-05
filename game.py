@@ -10,6 +10,7 @@ from grape import Grape
 from jugger import Jugger
 from rammer import Rammer
 from finalboss import FinalBoss
+from endwall import Endwall
 import time
 import numpy as np
 
@@ -18,12 +19,12 @@ pygame.init()
 
 screen_width = 1280
 screen_height = 720
-map_width = 1000
-map_height = 1000
+map_width = 13500
+map_height = 13500
 title = "Pirate Game"
 
-finalbossX = 100
-finalbossY = 100
+finalbossX = -2250
+finalbossY = -4500
 
 minimap_width = 100
 minimap_height = 100
@@ -34,7 +35,7 @@ minimap_pos_x = (screen_width/2 * (minimap_width / screen_width))/0.1
 minimap_pos_y = (screen_height/2 * (minimap_height / screen_height))/0.1
 
 num_islands = 500
-num_enemies = 10
+num_enemies = 100
 enemy_speed = 5
 enemy_range = 200
 
@@ -74,8 +75,8 @@ for j in range (8):
     for i in range(-100, 100):
         x = 80*i
         w = 80*j
-        border1 = Island(pygame.Vector2(x, -6500-w), "black", 0)
-        border2 = Island(pygame.Vector2(x, 7000+w), "black", 0)
+        border1 = Endwall(pygame.Vector2(x, -6500-w), "black")
+        border2 = Endwall(pygame.Vector2(x, 7000+w), "black")
         all_sprites_list.add(border1)
         moving_objects.append(border1)
         all_sprites_list.add(border2)
@@ -83,8 +84,8 @@ for j in range (8):
 
     for i in range(-100, 100):
         y = 80*i
-        border1 = Island(pygame.Vector2(-6000-w, y), "black", 0)
-        border2 = Island(pygame.Vector2(7500+w, y), "black", 0)
+        border1 = Endwall(pygame.Vector2(-6000-w, y), "black")
+        border2 = Endwall(pygame.Vector2(7500+w, y), "black")
         all_sprites_list.add(border1)
         moving_objects.append(border1)
         all_sprites_list.add(border2)
@@ -105,48 +106,48 @@ for i in range(num_islands):
 
 enemies = []
 for i in range(num_enemies%4):
-    randX = random.randint(-map_width//10, map_width//10)*10
-    randY = random.randint(-map_width//10, map_width//10)*10
+    randX = random.randint(-int(map_width/2), int(map_width/2))
+    randY = random.randint(-int(map_height/2), int(map_height/2))
     enemy = Ship("orange", 40, 40, randX, randY, enemy_speed)
     while pygame.sprite.collide_rect(home, enemy) or pygame.sprite.collide_rect(player,enemy):
-        randX = random.randint(-map_width//10, map_width//10)*10
-        randY = random.randint(-map_width//10, map_width//10)*10
+        randX = random.randint(-int(map_width/2), int(map_width/2))
+        randY = random.randint(-int(map_height/2), int(map_height/2))
         enemy = Ship("orange", 40, 40, randX, randY, enemy_speed)
     all_sprites_list.add(enemy)
     moving_objects.append(enemy)
     enemies.append(enemy)
     
 for i in range(num_enemies//4):
-    randX = random.randint(-map_width//10, map_width//10)*10
-    randY = random.randint(-map_width//10, map_width//10)*10
+    randX = random.randint(int(map_width/2)-int(map_width*0.4), int(map_width/2))
+    randY = random.randint(-int(map_height/2), 0)
     enemy = Jugger(randX, randY, enemy_speed)
     while pygame.sprite.collide_rect(home, enemy) or pygame.sprite.collide_rect(player,enemy):
-        randX = random.randint(-map_width//10, map_width//10)*10
-        randY = random.randint(-map_width//10, map_width//10)*10
+        randX = random.randint(int(map_width/2)-int(map_width*0.4), int(map_width/2))
+        randY = random.randint(-int(map_height/2), 0)
         enemy = Jugger(randX, randY, enemy_speed) 
     all_sprites_list.add(enemy)
     moving_objects.append(enemy)
     enemies.append(enemy)
 
 for i in range(num_enemies//4):
-    randX = random.randint(-map_width//10, map_width//10)*10
-    randY = random.randint(-map_width//10, map_width//10)*10
+    randX = random.randint(int(map_width/2)-int(0.6*map_width), int(map_width/2))
+    randY = random.randint(int(map_height/2)-int(map_height/3),int(map_height/2))
     enemy = Grape(randX, randY, enemy_speed) 
     while pygame.sprite.collide_rect(home, enemy) or pygame.sprite.collide_rect(player,enemy):
-        randX = random.randint(-map_width//10, map_width//10)*10
-        randY = random.randint(-map_width//10, map_width//10)*10
+        randX = random.randint(int(map_width/2)-int(0.6*map_width), int(map_width/2))
+        randY = random.randint(int(map_height/2)-int(map_height/3), int(map_height/2))
         enemy = Grape(randX, randY, enemy_speed) 
     all_sprites_list.add(enemy)
     moving_objects.append(enemy)
     enemies.append(enemy)
 
 for i in range(num_enemies//4):
-    randX = random.randint(-map_width//10, map_width//10)*10
-    randY = random.randint(-map_width//10, map_width//10)*10
+    randX = random.randint(-int(map_width/2), -int(map_width/2)+int(map_width/4))
+    randY = random.randint(-int(map_height/2)+int(map_height/3), int(map_height/2))
     enemy = Rammer(randX, randY, enemy_speed) 
     while pygame.sprite.collide_rect(home, enemy) or pygame.sprite.collide_rect(player,enemy):
-        randX = random.randint(-map_width//10, map_width//10)*10
-        randY = random.randint(-map_width//10, map_width//10)*10
+        randX = random.randint(-int(map_width/2), -int(map_width/2)+int(map_width/4))
+        randY = random.randint(-int(map_height/2)+int(map_height/3), int(map_height/2))
         enemy = Rammer(randX, randY, enemy_speed) 
     all_sprites_list.add(enemy)
     moving_objects.append(enemy)
@@ -318,11 +319,16 @@ while running:
                     sprite.health -= 1
                 elif not player.ramming and sprite.ramming:
                     player.health -= 1
-            if type(sprite) == Island:
+            if (type(sprite) == Island):
                 for sprite in moving_objects:
                     sprite.shiftPositionX(-velocity[0])
                     sprite.shiftPositionY(-velocity[1])
                 player.gold += 1
+                touchingIsland = True
+            if (type(sprite) == Endwall):
+                for sprite in moving_objects:
+                    sprite.shiftPositionX(-velocity[0])
+                    sprite.shiftPositionY(-velocity[1])
                 touchingIsland = True
             if type(sprite) == Home:
                 at_home = True
