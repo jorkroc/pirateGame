@@ -158,16 +158,12 @@ while running:
     for sprite in moving_objects:
         sprite.shiftPositionX(velocity[0])
         sprite.shiftPositionY(velocity[1])
-        if pygame.sprite.collide_rect(player, sprite):
-            try:
-                if player.health > sprite.health:
-                    moving_objects.remove(sprite)
-                    all_sprites_list.remove(sprite)
-                else:
-                    print("player dead")
-            except:
-                pass
-
+        if type(sprite) == Ship:
+            if player.health > sprite.health:
+                moving_objects.remove(sprite)
+                all_sprites_list.remove(sprite)
+            else:
+                print("player dead")
 
     for enemy in enemies:
         if math.hypot((enemy.xpos-player.xpos), (enemy.ypos-player.ypos)) <= enemy_range:
@@ -192,7 +188,6 @@ while running:
     writeToScreen(screen, "Current Gold: {}".format(gold), font_size, screen_width - 300, 20)
 
     pygame.display.flip()
-    gold += 1
 
     dt = clock.tick(60) / 1000
 
