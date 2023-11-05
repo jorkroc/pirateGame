@@ -32,7 +32,6 @@ class Ship(pygame.sprite.Sprite):
         self.rect.y = self.ypos - self.height / 2
 
     def chase(self, sprite):
-        print("chase")
         dx = sprite.xpos - self.xpos
         dy = sprite.ypos - self.ypos
         self.shiftPositionX(dx*self.speed/1000)
