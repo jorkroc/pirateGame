@@ -156,7 +156,7 @@ for i in range(num_islands):
     randX = random.randint(-int(map_width/2), int(map_width/2))/1.05 + 600
     randY = random.randint(-int(map_width/2), int(map_width/2))/1.05 + 300
     position = pygame.Vector2(randX, randY)
-    island = Island(position, "yellow", random.randint(0, max_loot))
+    island = Island(position, "yellow", random.randint(1, max_loot))
     while pygame.sprite.collide_rect(home, island) or pygame.sprite.collide_rect(player, island):
         randX = random.randint(-int(map_width/2), int(map_width/2))/1.05 + 600
         randY = random.randint(-int(map_width/2), int(map_width/2))/1.05 + 300
@@ -320,6 +320,25 @@ def enemyFire(ship):
         bulletList.append(bullet)
         moving_objects.append(bullet)
         all_sprites_list.add(bullet)
+    elif ship.type==4:
+        if random.randint(0,800)<5:
+            for i in range(8):    
+                bullet = Bullet(3,False,4,9,ship.xpos,ship.ypos)
+                bulletList.append(bullet)
+                moving_objects.append(bullet)
+                all_sprites_list.add(bullet)
+
+        if random.randint(0,800)<4:
+            bullet=Bullet(5,False,24,9,ship.xpos,ship.ypos)
+            bulletList.append(bullet)
+            moving_objects.append(bullet)
+            all_sprites_list.add(bullet)
+        elif random.randint(0,800)<6:
+            bullet=Bullet(4,False,10,9,ship.xpos,ship.ypos)
+            bulletList.append(bullet)
+            moving_objects.append(bullet)
+            all_sprites_list.add(bullet)
+
 
 
 all_enemies = enemies
