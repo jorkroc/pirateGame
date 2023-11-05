@@ -174,21 +174,25 @@ def drawUpgradeMenu(screen, font_size):
     bg = pygame.Surface([w, h])
     bg.set_alpha(128)
     bg.fill((255, 255, 255))
-
-    def button(bx, by, pad, text):
-        bw, bh = len(text) * font_size / 2, font_size
-
-    bhx, bhy = 200, 200
-    pad = 15
-    buy_health_text = "Increase Max Health"
-    bhw, bhh = len(buy_health_text) * font_size / 2, font_size
-    buy_health_but = pygame.Surface([bhw + pad * 2, bhh + pad * 2])
-    buy_health_but.fill((128, 128, 128))
-    buy_health_but.set_alpha(196)
-
     screen.blit(bg, (tlx, tly))
-    screen.blit(buy_health_but, (tlx + bhx - pad, tly + bhy - pad))
-    writeToScreen(screen, buy_health_text, font_size, tlx + bhx, tly + bhy, False) 
+
+    bhx, bhy, pad = 200, 200, 15
+    stats = ["Max Health", "Speed", "Bullet Speed", "Rate of Fire", "Damage", "Bullet Range"]
+    for dis, stat in enumerate(stats):
+        bhtext = "Increase {}".format(stat)
+        bhw, bhh = len(bhtext) * font_size / 2, font_size
+        bhbut = pygame.Surface([bhw + pad * 2, bhh + pad * 2])
+        bhbut.fill((128, 128, 128))
+        bhbut.set_alpha(196)
+        pad2 = 5
+        bhtlx = tlx + bhx - pad
+        bhtly = tly + bhy - pad + dis * (font_size + pad * 2 + pad2)
+        screen.blit(bhbut, (bhtlx, bhtly))
+        writeToScreen(screen, bhtext, font_size, bhtlx, bhtly, False) 
+
+
+
+    #writeToScreen(screen, bhtext, font_size, tlx + bhx, tly + bhy, False) 
     if pygame.mouse.get_pressed()[0]:
         mx = pygame.mouse.get_pos()[0]
         my = pygame.mouse.get_pos()[1]
