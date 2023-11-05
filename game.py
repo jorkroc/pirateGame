@@ -135,11 +135,11 @@ for i in range(num_enemies//4):
 for i in range(num_enemies//4):
     randX = random.randint(-int(map_width/2), -int(map_width/2)+int(map_width/4))
     randY = random.randint(-int(map_height/2)+int(map_height/3), int(map_height/2))
-    enemy = Rammer(randX, randY, enemy_speed) 
+    enemy = Rammer(randX, randY, 3*enemy_speed) 
     while pygame.sprite.collide_rect(home, enemy) or pygame.sprite.collide_rect(player,enemy):
         randX = random.randint(-int(map_width/2), -int(map_width/2)+int(map_width/4))
         randY = random.randint(-int(map_height/2)+int(map_height/3), int(map_height/2))
-        enemy = Rammer(randX, randY, enemy_speed) 
+        enemy = Rammer(randX, randY, 3*enemy_speed) 
     all_sprites_list.add(enemy)
     moving_objects.append(enemy)
     enemies.append(enemy)
