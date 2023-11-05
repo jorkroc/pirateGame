@@ -36,7 +36,7 @@ minimap_pos_y = (screen_height/2 * (minimap_height / screen_height))/0.1
 
 num_islands = 150
 num_enemies = 50
-enemy_speed = 5
+enemy_speed = 10
 enemy_range = 200
 
 font_size = 25
@@ -286,7 +286,7 @@ def bulletUpdate():
             bullet.kill()
     bulletList=bulletList[count:]
 
-
+all_enemies = enemies
 while running:
 
     for event in pygame.event.get():
@@ -344,22 +344,9 @@ while running:
             if type(sprite) == Home:
                 at_home = True
 
-    for enemy in enemies:
+    for enemy in all_enemies:
         if math.hypot((enemy.xpos-player.xpos), (enemy.ypos-player.ypos)) <= enemy_range:
-            print("Chase")
             enemy.chase(player)
-        # print(int(enemy.health))
-        # print(int(enemy.health)<=0)
-        # print(int(enemy.health))
-        # if enemy.health<=0:
-        #     for u in range(99):
-        #         print("baba")
-        #     enemy.kill()
-        #     del enemy
-        # else:
-        #     enemies2=enemies2+[enemy]
-    
-    
 
     velocity[0] *= 0.9
     velocity[1] *= 0.9

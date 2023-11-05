@@ -15,7 +15,7 @@ class Ship(pygame.sprite.Sprite):
         self.rect.x = xpos - width / 2
         self.rect.y = ypos - height / 2
         self.health = 20
-        self.speed = 10
+        self.speed = speed
         self.bullet_speed = 0
         self.rate_of_fire = 0
         self.damage = 0
@@ -31,6 +31,7 @@ class Ship(pygame.sprite.Sprite):
         self.rect.y = self.ypos - self.height / 2
 
     def chase(self, sprite):
+        print("chase")
         dx = sprite.xpos - self.xpos
         dy = sprite.ypos - self.ypos
         self.shiftPositionX(dx*self.speed/1000)
