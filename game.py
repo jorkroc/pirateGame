@@ -291,6 +291,8 @@ def bulletUpdate():
                     global enemies
                     enemy.kill()
                     player.gold+=20
+                    enemy.living=False
+                    enemy.ramming=False
                     del enemy
                     enemies=enemies[:index]+enemies[index+1:]
                     break
@@ -410,7 +412,7 @@ while running:
     for enemy in all_enemies:
         if math.hypot((enemy.xpos-player.xpos), (enemy.ypos-player.ypos)) <= enemy_range:
             enemy.chase(player)
-        if abs(1280/2-enemy.xpos)<400 and abs(720/2-enemy.ypos)<400:
+        if abs(1280/2-enemy.xpos)<400 and abs(720/2-enemy.ypos)<400 and enemy.living:
             enemyFire(enemy)
 
     velocity[0] *= 0.9

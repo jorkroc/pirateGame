@@ -22,6 +22,7 @@ class Ship(pygame.sprite.Sprite):
         self.bullet_range = 1
         self.direction = 0
         self.type=3
+        self.living=True
 
     def shiftPositionX(self, shift):
         self.xpos += shift
