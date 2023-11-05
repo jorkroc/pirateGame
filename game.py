@@ -175,10 +175,8 @@ while running:
             running = False
 
     for sprite in moving_objects:
-        try:
+        if type(sprite) == Ship:
             sprite.speed = abs(sprite.speed) 
-        except:
-            continue
 
     pygame.draw.circle(screen, island.color, island.position, 30)
 
