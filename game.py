@@ -35,6 +35,7 @@ minimap_pos_x = (screen_width/2 * (minimap_width / screen_width))/0.1
 minimap_pos_y = (screen_height/2 * (minimap_height / screen_height))/0.1
 
 num_islands = 150
+max_loot = 3
 num_enemies = 50
 enemy_speed = 10
 enemy_range = 200
@@ -153,7 +154,7 @@ for i in range(num_islands):
     randX = random.randint(-int(map_width/2), int(map_width/2))
     randY = random.randint(-int(map_width/2), int(map_width/2))
     position = pygame.Vector2(randX, randY)
-    island = Island(position, "yellow", random.randint(10, 100))
+    island = Island(position, "yellow", random.randint(0, max_loot))
     while pygame.sprite.collide_rect(home, island) or pygame.sprite.collide_rect(player, island):
         randX = random.randint(-int(map_width/2), int(map_width/2))
         randY = random.randint(-int(map_width/2), int(map_width/2))
