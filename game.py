@@ -504,7 +504,8 @@ while running:
             writeToScreen(screen, "{}: {}".format(stat, stat_map[stat]), font_size, stat_x, dis * i + pad)
     
     if player.health <= 0:
-        writeToScreen(screen, "You're Dead", font_size, screen_width / 2 - 80, screen_height / 2 - 15)
+        writeToScreen(screen, "You're Dead lmaoooooooo", font_size, screen_width / 2 - 80, screen_height / 2 - 15)
+        running=False
     if finalboss.health <= 0:
         writeToScreen(screen, "You Win!", font_size, screen_width / 2 - 60, screen_height / 2 - 15)
 
@@ -513,5 +514,5 @@ while running:
     dt = clock.tick(60) / 1000
 
     shift = player.speed
-
+time.sleep(5)
 pygame.quit()
