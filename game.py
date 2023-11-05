@@ -10,6 +10,7 @@ from grape import Grape
 from jugger import Jugger
 from rammer import Rammer
 from finalboss import FinalBoss
+import time
 
 pygame.init()
 
@@ -132,6 +133,8 @@ all_sprites_list.add(finalboss)
 moving_objects.append(finalboss)
 enemies.append(finalboss)
 
+ship_types = [Grape, Ship, Rammer, Jugger, FinalBoss]
+
 def writeToScreen(screen, text, font_size, x, y):
     for i, char in enumerate(text):
         screen.blit(letters[char], (x + i * font_size / 2, y))
@@ -140,15 +143,20 @@ def writeToScreen(screen, text, font_size, x, y):
 all_sprites_list.add(player)
 
 
-
+lastFire=-1
 def bulletFire():
-    global bulletList
-    global moving_objects
-    global all_sprites_list
-    bullet = Bullet(0,0)
-    bulletList.append(bullet)
-    moving_objects.append(bullet)
-    all_sprites_list.add(bullet)
+    global lastFire
+    newTime=time.time()
+    elapsed=newTime-lastFire
+    if elapsed>1:
+        lastFire=newTime
+        global bulletList
+        global moving_objects
+        global all_sprites_list
+        bullet = Bullet(0,0)
+        bulletList.append(bullet)
+        moving_objects.append(bullet)
+        all_sprites_list.add(bullet)
 
 def bulletUpdate():
     global bulletList
@@ -192,15 +200,19 @@ while running:
     for sprite in moving_objects:
         sprite.shiftPositionX(velocity[0])
         sprite.shiftPositionY(velocity[1])
+
         if pygame.sprite.collide_rect(player, sprite):
-            sprite.shiftPositionX(-velocity[0])
-            sprite.shiftPositionY(-velocity[1])
-            sprite.speed *= -1
+            if type(sprite) in ship_types:
+                sprite.shiftPositionX(-velocity[0])
+                sprite.shiftPositionY(-velocity[1])
+                sprite.speed *= -1
+            if type(sprite) == Island:
+                gold += 1
 
 
     for enemy in enemies:
         if math.hypot((enemy.xpos-player.xpos), (enemy.ypos-player.ypos)) <= enemy_range:
-            print("Chase")
+            #print("Chase")
             enemy.chase(player)
     
 
