@@ -246,7 +246,7 @@ while running:
                 for sprite in moving_objects:
                     sprite.shiftPositionX(-velocity[0])
                     sprite.shiftPositionY(-velocity[1])
-                    gold += 1
+                gold += 1
                 touchingIsland = True
             if type(sprite) == Home:
                 at_home = True
