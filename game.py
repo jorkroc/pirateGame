@@ -147,13 +147,27 @@ def writeToScreen(screen, text, font_size, x, y, bg=True):
 def drawUpgradeMenu(screen, font_size):
     w, h = 600, 600
     sw, sh = screen.get_width(), screen.get_height()
+    tlx, tly = (sw - w) / 2, (sh - h) / 2
     bg = pygame.Surface([w, h])
     bg.set_alpha(128)
     bg.fill((255, 255, 255))
-    screen.blit(bg, ((sw - w) / 2, (sh - h) / 2))
-    writeToScreen(screen, "Love you <3", font_size, 400, 200, False)
+
+    bhx, bhy = 200, 200
+    pad = 15
+    buy_health_text = "Increase Health"
+    bhw, bhh = len(buy_health_text) * font_size / 2, font_size
+    buy_health_but = pygame.Surface([bhw + pad * 2, bhh + pad * 2])
+    buy_health_but.fill((128, 128, 128))
+    buy_health_but.set_alpha(196)
+
+    screen.blit(bg, (tlx, tly))
+    screen.blit(buy_health_but, (tlx + bhx - pad, tly + bhy - pad))
+    writeToScreen(screen, "Increase Health", font_size, tlx + bhx, tly + bhy, False) 
     if pygame.mouse.get_pressed()[0]:
-        print(pygame.mouse.get_pos())
+        mx = pygame.mouse.get_pos()[0]
+        my = pygame.mouse.get_pos()[1]
+        if tlx + bhx <= mx <= tlx + bhx + bhw and tly + bhy <= my <= tly + bhy + bhh:
+           return 0
 
 def truncate(x, d=2):
     y = x * 10**d
@@ -269,9 +283,10 @@ while running:
     screen.blit(minimap, minimap_rect) 
     player.health -= 0.001
     if at_home:
-        drawUpgradeMenu(screen, font_size)
         player.health = player.max_health
- 
+        if drawUpgradeMenu(screen, font_size) == 0:
+            player.max_health += 1
+    
     writeToScreen(screen, "Gold: {}".format(gold), font_size, screen_width - 250, 20)
     writeToScreen(screen, "{}/{}".format(truncate(player.health), player.max_health), font_size, screen_width - 250, 60)
 
