@@ -36,7 +36,6 @@ num_enemies = 10
 enemy_speed = 5
 enemy_range = 200
 
-gold = 0
 font_size = 20
 font = pygame.font.SysFont('Courier New', font_size)
 black = (0, 0, 0)
@@ -167,6 +166,23 @@ def writeToScreen(screen, text, font_size, x, y, bg=True):
         else:
             screen.blit(letters_nobg[char], (x + i * font_size / 2, y))
 
+def parseOption(option, player):
+    if option != 0:
+        player.gold -= 1
+    if option == 1:
+        player.max_health += 1
+    elif option == 2:
+        player.speed += 1
+    elif option == 3:
+        player.bullet_speed += 1
+    elif option == 4:
+        player.rate_of_fire += 1
+    elif option == 5:
+        player.damage += 1
+    elif option == 6:
+        player.bullet_range += 1
+    
+
 def drawUpgradeMenu(screen, font_size):
     w, h = 600, 600
     sw, sh = screen.get_width(), screen.get_height()
@@ -195,7 +211,7 @@ def drawUpgradeMenu(screen, font_size):
         for i, stat in enumerate(stats):
             bhtext = "Increase {}".format(stat)
             bhw, bhh = len(bhtext) * font_size / 2, font_size
-            if tlx + bhx <= mx <= tlx + bhx + bhw + 2 * pad and tly + bhy <= my <= tly + bhy + bhh + 2 * pad:
+            if tlx + bhx <= mx <= tlx + bhx + bhw + 2 * pad and tly + bhy <= my <= tly + bhy + i * (font_size + pad * 2 + pad2) + bhh + pad * 2:
                 return i + 1
 
     return 0
@@ -296,7 +312,7 @@ while running:
                 for sprite in moving_objects:
                     sprite.shiftPositionX(-velocity[0])
                     sprite.shiftPositionY(-velocity[1])
-                gold += 1
+                player.gold += 1
                 touchingIsland = True
             if type(sprite) == Home:
                 at_home = True
@@ -330,18 +346,33 @@ while running:
     if at_home:
         player.health = player.max_health
         option = drawUpgradeMenu(screen, font_size)
-        if option == 1 and not bought:
-            gold -= 1
-            player.max_health += 1
+        if not bought:
+            parseOption(option, player)
         
         if option == 0:
             bought = False
         else:
             bought = True
     
-    writeToScreen(screen, "Gold: {}".format(gold), font_size, screen_width - 250, 20)
-    writeToScreen(screen, "{}/{}".format(truncate(player.health), player.max_health), font_size, screen_width - 250, 60)
 
+    # draw stats
+    show_stats = ["gold", "health", "speed", "bullet speed", "rate of fire", "damage", "bullet range"]
+    stat_map = {
+        "gold":player.gold,
+        "speed":player.speed,
+        "bullet speed":player.bullet_speed,
+        "rate of fire":player.rate_of_fire,
+        "damage":player.damage,
+        "bullet range":player.bullet_range
+    }
+    stat_x = screen_width - 250
+    pad = 20
+    dis = font_size + pad
+    for i, stat in enumerate(show_stats):
+        if stat == "health":
+            writeToScreen(screen, "{}/{}".format(truncate(player.health), player.max_health), font_size, stat_x, dis * i + pad)
+        else:
+            writeToScreen(screen, "{}: {}".format(stat, stat_map[stat]), font_size, stat_x, dis * i + pad)
     pygame.display.flip()
 
     dt = clock.tick(60) / 1000
