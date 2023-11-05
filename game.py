@@ -159,6 +159,7 @@ for i in range(num_islands):
         randY = random.randint(-int(map_width/2), int(map_width/2))
         position = pygame.Vector2(randX, randY)
         island = Island(position, "yellow", random.randint(10, 100))
+    print(id(island))
     all_sprites_list.add(island)
     moving_objects.append(island)
 
@@ -173,6 +174,8 @@ def writeToScreen(screen, text, font_size, x, y, bg=True):
             screen.blit(letters_nobg[char], (x + i * font_size / 2, y))
 
 def parseOption(option, player):
+    if player.gold <= 0:
+        return
     if option != 0:
         player.gold -= 1
     if option == 1:
@@ -326,10 +329,12 @@ while running:
                 elif not player.ramming and sprite.ramming:
                     player.health -= 1
             if (type(sprite) == Island):
-                for sprite in moving_objects:
-                    sprite.shiftPositionX(-velocity[0])
-                    sprite.shiftPositionY(-velocity[1])
-                print(type(sprite))
+                for sprite2 in moving_objects:
+                    sprite2.shiftPositionX(-velocity[0])
+                    sprite2.shiftPositionY(-velocity[1])
+                if sprite.treasure > 0:
+                    player.gold += 1
+                    sprite.treasure -= 1
                 touchingIsland = True
             if (type(sprite) == Endwall):
                 for sprite in moving_objects:
