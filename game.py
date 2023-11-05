@@ -143,6 +143,7 @@ def drawUpgradeMenu(screen, font_size):
     w, h = 600, 600
     sw, sh = screen.get_width(), screen.get_height()
     bg = pygame.Surface([w, h])
+    bg.set_alpha(128)
     bg.fill((255, 255, 255))
     screen.blit(bg, ((sw - w) / 2, (sh - h) / 2))
     writeToScreen(screen, "Love you <3", font_size, 400, 400)
