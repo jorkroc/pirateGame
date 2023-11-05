@@ -18,7 +18,7 @@ class PlayerShip(ship.Ship):
         self.gold = 0
         self.territory = Territory.SAFE
         self.direction=0
-        self.damage=0
+        self.damage=1
         self.bullet_speed=5
         self.speed = 1
         self.image = pygame.image.load('images/boat.png').convert_alpha()

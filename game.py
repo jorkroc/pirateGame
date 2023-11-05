@@ -156,7 +156,7 @@ for i in range(num_islands):
     randX = random.randint(-int(map_width/2), int(map_width/2))/1.05 + 600
     randY = random.randint(-int(map_width/2), int(map_width/2))/1.05 + 300
     position = pygame.Vector2(randX, randY)
-    island = Island(position, "yellow", random.randint(0, max_loot))
+    island = Island(position, "yellow", random.randint(1, max_loot))
     while pygame.sprite.collide_rect(home, island) or pygame.sprite.collide_rect(player, island):
         randX = random.randint(-int(map_width/2), int(map_width/2))/1.05 + 600
         randY = random.randint(-int(map_width/2), int(map_width/2))/1.05 + 300
