@@ -255,6 +255,7 @@ def bulletFire():
 def bulletUpdate():
     global bulletList
     global enemyGroup
+    count=0
     for bullet in bulletList:
         bullet.update()
         count=0
@@ -264,7 +265,7 @@ def bulletUpdate():
             del bullet
         elif bullet.active and bullet.friendly:
             for enemy in pygame.sprite.spritecollide(bullet, enemyGroup, False):
-                #enemy.health-=bullet.damage
+                enemy.health-=bullet.damage
                 print("heya")
                 bullet.active=False
                 bullet.kill()
@@ -273,7 +274,7 @@ def bulletUpdate():
             player.health-=bullet.damage
             bullet.active=False
             bullet.kill()
-        bulletList=bulletList[count:]
+    bulletList=bulletList[count:]
 
 
 while running:
@@ -334,9 +335,17 @@ while running:
                 at_home = True
 
     for enemy in enemies:
+        enemies2=[]
         if math.hypot((enemy.xpos-player.xpos), (enemy.ypos-player.ypos)) <= enemy_range:
             #print("Chase")
             enemy.chase(player)
+        if enemy.health<=0:
+            enemy.kill()
+            del enemy
+        else:
+            enemies2=enemies2+[enemy]
+    enemies=enemies2
+    
     
 
     velocity[0] *= 0.9
@@ -405,7 +414,11 @@ while running:
                 sprite.image = pygame.image.load('images/ram.png').convert_alpha()
             else:
                 sprite.image = pygame.image.load('images/ram_left.png').convert_alpha()
-
+        if (type(sprite) is Ship):
+            if (sprite.xpos < 1280/2):
+                sprite.image = pygame.image.load('images/stand_boat.png').convert_alpha()
+            else:
+                sprite.image = pygame.image.load('images/stand_boat_left.png').convert_alpha()
     # draw stats
     show_stats = ["gold", "health", "speed", "bullet speed", "rate of fire", "damage", "bullet range"]
     stat_map = {
