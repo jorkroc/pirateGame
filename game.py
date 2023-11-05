@@ -36,8 +36,8 @@ minimap_pos_x = (screen_width/2 * (minimap_width / screen_width))/0.1
 minimap_pos_y = (screen_height/2 * (minimap_height / screen_height))/0.1
 
 num_islands = 150
-max_loot = 3
-num_enemies = 50
+max_loot = 10
+num_enemies = 100
 enemy_speed = 10
 enemy_range = 200
 num_waves = 600
