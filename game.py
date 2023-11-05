@@ -34,7 +34,7 @@ minimap_rect.topleft = (10, 10)
 minimap_pos_x = (screen_width/2 * (minimap_width / screen_width))/0.1
 minimap_pos_y = (screen_height/2 * (minimap_height / screen_height))/0.1
 
-num_islands = 500
+num_islands = 200
 num_enemies = 100
 enemy_speed = 5
 enemy_range = 200
@@ -381,6 +381,7 @@ while running:
     pygame.draw.rect(minimap, "green", pygame.Rect(60, 0, 40, 50))
     pygame.draw.rect(minimap, "purple", pygame.Rect(40, 67, 60, 33))
     pygame.draw.rect(minimap, "grey", pygame.Rect(25, 10, 10, 10))
+    pygame.draw.rect(minimap, "blue", pygame.Rect(42, 45, 10, 10))
 
     pygame.draw.circle(minimap, "red", (int(0.1*(minimap_pos_x + (minimap_width / screen_width))), int(0.1*(minimap_pos_y - (minimap_height / screen_height)))), 5)
     screen.blit(minimap, minimap_rect) 
@@ -395,6 +396,24 @@ while running:
         else:
             bought = True
     
+    #enemy image directions
+
+    for sprite in all_sprites_list:
+        if type(sprite) is Jugger:
+            if (sprite.xpos < 1280/2):
+                sprite.image = pygame.image.load('images/jug.png').convert_alpha()
+            else:
+                sprite.image = pygame.image.load('images/jug_left.png').convert_alpha()
+        if type(sprite) is Grape:
+            if (sprite.xpos < 1280/2):
+                sprite.image = pygame.image.load('images/grapeshot.png').convert_alpha()
+            else:
+                sprite.image = pygame.image.load('images/grapeshot_left.png').convert_alpha()
+        if (type(sprite) is Rammer):
+            if (sprite.xpos < 1280/2):
+                sprite.image = pygame.image.load('images/ram.png').convert_alpha()
+            else:
+                sprite.image = pygame.image.load('images/ram_left.png').convert_alpha()
 
     # draw stats
     show_stats = ["gold", "health", "speed", "bullet speed", "rate of fire", "damage", "bullet range"]
