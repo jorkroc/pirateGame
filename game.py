@@ -10,6 +10,7 @@ from grape import Grape
 from jugger import Jugger
 from rammer import Rammer
 from finalboss import FinalBoss
+from endwall import Endwall
 import time
 
 pygame.init()
@@ -73,8 +74,8 @@ for j in range (8):
     for i in range(-100, 100):
         x = 80*i
         w = 80*j
-        border1 = Island(pygame.Vector2(x, -6500-w), "black", 0)
-        border2 = Island(pygame.Vector2(x, 7000+w), "black", 0)
+        border1 = Endwall(pygame.Vector2(x, -6500-w), "black")
+        border2 = Endwall(pygame.Vector2(x, 7000+w), "black")
         all_sprites_list.add(border1)
         moving_objects.append(border1)
         all_sprites_list.add(border2)
@@ -82,8 +83,8 @@ for j in range (8):
 
     for i in range(-100, 100):
         y = 80*i
-        border1 = Island(pygame.Vector2(-6000-w, y), "black", 0)
-        border2 = Island(pygame.Vector2(7500+w, y), "black", 0)
+        border1 = Endwall(pygame.Vector2(-6000-w, y), "black")
+        border2 = Endwall(pygame.Vector2(7500+w, y), "black")
         all_sprites_list.add(border1)
         moving_objects.append(border1)
         all_sprites_list.add(border2)
@@ -294,11 +295,16 @@ while running:
                     sprite.health -= 1
                 elif not player.ramming and sprite.ramming:
                     player.health -= 1
-            if type(sprite) == Island:
+            if (type(sprite) == Island):
                 for sprite in moving_objects:
                     sprite.shiftPositionX(-velocity[0])
                     sprite.shiftPositionY(-velocity[1])
                 gold += 1
+                touchingIsland = True
+            if (type(sprite) == Endwall):
+                for sprite in moving_objects:
+                    sprite.shiftPositionX(-velocity[0])
+                    sprite.shiftPositionY(-velocity[1])
                 touchingIsland = True
             if type(sprite) == Home:
                 at_home = True
