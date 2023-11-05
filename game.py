@@ -37,7 +37,7 @@ enemy_speed = 5
 enemy_range = 200
 
 gold = 0
-font_size = 30
+font_size = 20
 font = pygame.font.SysFont('Courier New', font_size)
 black = (0, 0, 0)
 white = (255, 255, 255)
@@ -176,7 +176,7 @@ def drawUpgradeMenu(screen, font_size):
     bg.fill((255, 255, 255))
     screen.blit(bg, (tlx, tly))
 
-    bhx, bhy, pad = 200, 200, 15
+    bhx, bhy, pad, pad2 = 200, 200, 15, 5
     stats = ["Max Health", "Speed", "Bullet Speed", "Rate of Fire", "Damage", "Bullet Range"]
     for dis, stat in enumerate(stats):
         bhtext = "Increase {}".format(stat)
@@ -184,20 +184,20 @@ def drawUpgradeMenu(screen, font_size):
         bhbut = pygame.Surface([bhw + pad * 2, bhh + pad * 2])
         bhbut.fill((128, 128, 128))
         bhbut.set_alpha(196)
-        pad2 = 5
-        bhtlx = tlx + bhx - pad
-        bhtly = tly + bhy - pad + dis * (font_size + pad * 2 + pad2)
+        bhtlx = tlx + bhx
+        bhtly = tly + bhy + dis * (font_size + pad * 2 + pad2)
         screen.blit(bhbut, (bhtlx, bhtly))
-        writeToScreen(screen, bhtext, font_size, bhtlx, bhtly, False) 
+        writeToScreen(screen, bhtext, font_size, bhtlx + pad, bhtly + pad, False) 
 
-
-
-    #writeToScreen(screen, bhtext, font_size, tlx + bhx, tly + bhy, False) 
     if pygame.mouse.get_pressed()[0]:
         mx = pygame.mouse.get_pos()[0]
         my = pygame.mouse.get_pos()[1]
-        if tlx + bhx <= mx <= tlx + bhx + bhw and tly + bhy <= my <= tly + bhy + bhh:
-           return 1
+        for i, stat in enumerate(stats):
+            bhtext = "Increase {}".format(stat)
+            bhw, bhh = len(bhtext) * font_size / 2, font_size
+            if tlx + bhx <= mx <= tlx + bhx + bhw + 2 * pad and tly + bhy <= my <= tly + bhy + bhh + 2 * pad:
+                return i + 1
+
     return 0
 
 def truncate(x, d=2):
