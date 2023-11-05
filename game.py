@@ -92,14 +92,14 @@ for j in range (8):
         moving_objects.append(border2)
 
 for i in range(num_islands):
-    randX = random.randint(-map_width//10, map_width//10)*10
-    randY = random.randint(-map_width//10, map_width//10)*10
-    position = pygame.Vector2(randX, randY)*10
+    randX = random.randint(-int(map_width/2), int(map_width/2))
+    randY = random.randint(-int(map_width/2), int(map_width/2))
+    position = pygame.Vector2(randX, randY)
     island = Island(position, "yellow", random.randint(10, 100))
     while pygame.sprite.collide_rect(home, island) or pygame.sprite.collide_rect(player, island):
-        randX = random.randint(-map_width//10, map_width//10)*10
-        randY = random.randint(-map_width//10, map_width//10)*10
-        position = pygame.Vector2(randX, randY)*10
+        randX = random.randint(-int(map_width/2), int(map_width/2))
+        randY = random.randint(-int(map_width/2), int(map_width/2))
+        position = pygame.Vector2(randX, randY)
         island = Island(position, "yellow", random.randint(10, 100))
     all_sprites_list.add(island)
     moving_objects.append(island)
