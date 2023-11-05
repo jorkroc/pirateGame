@@ -348,18 +348,6 @@ while running:
     for enemy in all_enemies:
         if math.hypot((enemy.xpos-player.xpos), (enemy.ypos-player.ypos)) <= enemy_range:
             enemy.chase(player)
-        # print(int(enemy.health))
-        # print(int(enemy.health)<=0)
-        # print(int(enemy.health))
-        # if enemy.health<=0:
-        #     for u in range(99):
-        #         print("baba")
-        #     enemy.kill()
-        #     del enemy
-        # else:
-        #     enemies2=enemies2+[enemy]
-    
-    
 
     velocity[0] *= 0.9
     velocity[1] *= 0.9
