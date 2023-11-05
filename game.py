@@ -239,7 +239,7 @@ def bulletFire():
     global lastFire
     newTime=time.time()
     elapsed=newTime-lastFire
-    if elapsed>1:
+    if elapsed>(0.9)**(player.rate_of_fire-1):
         lastFire=newTime
         global bulletList
         global moving_objects
@@ -258,7 +258,7 @@ def bulletUpdate():
     for bullet in bulletList:
         bullet.update()
         count=0
-        if bullet.life>100:
+        if bullet.life>10*player.bullet_range+10:
             count+=1
             bullet.kill()
             del bullet

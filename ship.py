@@ -19,7 +19,7 @@ class Ship(pygame.sprite.Sprite):
         self.bullet_speed = 0
         self.rate_of_fire = 0
         self.damage = 0
-        self.bullet_range = 0
+        self.bullet_range = 1
         self.direction = 0
 
     def shiftPositionX(self, shift):
