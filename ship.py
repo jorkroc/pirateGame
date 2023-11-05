@@ -14,7 +14,7 @@ class Ship(pygame.sprite.Sprite):
         self.speed = speed
         self.rect.x = xpos - width / 2
         self.rect.y = ypos - height / 2
-        self.health = 0
+        self.health = 20
         self.speed = 0
         self.bullet_speed = 0
         self.rate_of_fire = 0
