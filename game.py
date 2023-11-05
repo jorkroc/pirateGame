@@ -35,6 +35,16 @@ num_enemies = 10
 enemy_speed = 5
 enemy_range = 200
 
+gold = 0
+font_size = 30
+font = pygame.font.SysFont('Courier New', font_size)
+black = (0, 0, 0)
+white = (255, 255, 255)
+letters = {}
+for i in range(32, 127):
+    char = chr(i)
+    letters[char] = font.render(char, False, black, white)
+
 screen = pygame.display.set_mode((screen_width, screen_height))
 pygame.display.set_caption(title)
 clock = pygame.time.Clock()
@@ -121,6 +131,10 @@ all_sprites_list.add(finalboss)
 moving_objects.append(finalboss)
 enemies.append(finalboss)
 
+def writeToScreen(screen, text, font_size, x, y):
+    for i, char in enumerate(text):
+        screen.blit(letters[char], (x + i * font_size / 2, y))
+
 # PLAYER HAS TO BE THE LAST ADDED
 all_sprites_list.add(player)
 while running:
@@ -147,17 +161,19 @@ while running:
         if pygame.sprite.collide_rect(player, sprite):
             try:
                 if player.health > sprite.health:
-                    print("collision")
+                    moving_objects.remove(sprite)
+                    all_sprites_list.remove(sprite)
                 else:
                     print("player dead")
             except:
-                print("nope")
+                pass
 
 
     for enemy in enemies:
         if math.hypot((enemy.xpos-player.xpos), (enemy.ypos-player.ypos)) <= enemy_range:
             print("Chase")
             enemy.chase(player)
+    
 
     velocity[0] *= 0.9
     velocity[1] *= 0.9
@@ -173,8 +189,10 @@ while running:
     screen.blit(minimap, minimap_rect)
     
     all_sprites_list.draw(screen) 
+    writeToScreen(screen, "Current Gold: {}".format(gold), font_size, 600, 600)
 
     pygame.display.flip()
+    gold += 1
 
     dt = clock.tick(60) / 1000
 
