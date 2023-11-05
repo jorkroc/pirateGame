@@ -6,9 +6,11 @@ from Island import Island
 from playership import PlayerShip
 from home import Home
 from bullets import Bullet
-#from grape import Grape
-#from jugger import Jugger
-#from rammer import Rammer
+from grape import Grape
+from jugger import Jugger
+from rammer import Rammer
+from finalboss import FinalBoss
+import time
 
 pygame.init()
 
@@ -17,6 +19,9 @@ screen_height = 720
 map_width = 1000
 map_height = 1000
 title = "Pirate Game"
+
+finalbossX = 100
+finalbossY = 100
 
 minimap_width = 100
 minimap_height = 100
@@ -31,6 +36,16 @@ num_enemies = 10
 enemy_speed = 5
 enemy_range = 200
 
+gold = 0
+font_size = 30
+font = pygame.font.SysFont('Courier New', font_size)
+black = (0, 0, 0)
+white = (255, 255, 255)
+letters = {}
+for i in range(32, 127):
+    char = chr(i)
+    letters[char] = font.render(char, False, black, white)
+
 screen = pygame.display.set_mode((screen_width, screen_height))
 pygame.display.set_caption(title)
 clock = pygame.time.Clock()
@@ -41,6 +56,7 @@ shift = 1
 velocity = [0,0]
 
 all_sprites_list = pygame.sprite.Group() 
+bulletList = []
 moving_objects = []
 
 player = PlayerShip(screen.get_width()/2, screen.get_height()/2)
@@ -112,13 +128,57 @@ for i in range(num_enemies//4):
     moving_objects.append(enemy)
     enemies.append(enemy)
 
+finalboss = FinalBoss(finalbossX, finalbossY, enemy_speed)
+all_sprites_list.add(finalboss)
+moving_objects.append(finalboss)
+enemies.append(finalboss)
+
+ship_types = [Grape, Ship, Rammer, Jugger, FinalBoss]
+
+def writeToScreen(screen, text, font_size, x, y):
+    for i, char in enumerate(text):
+        screen.blit(letters[char], (x + i * font_size / 2, y))
+
 # PLAYER HAS TO BE THE LAST ADDED
 all_sprites_list.add(player)
+
+
+lastFire=-1
+def bulletFire():
+    global lastFire
+    newTime=time.time()
+    elapsed=newTime-lastFire
+    if elapsed>1:
+        lastFire=newTime
+        global bulletList
+        global moving_objects
+        global all_sprites_list
+        bullet = Bullet(0,0)
+        bulletList.append(bullet)
+        moving_objects.append(bullet)
+        all_sprites_list.add(bullet)
+
+def bulletUpdate():
+    global bulletList
+    for bullet in bulletList:
+        bullet.update()
+        count=0
+        if bullet.life>100:
+            count+=1
+            bullet.kill()
+            del bullet
+        bulletList=bulletList[count:]
 while running:
 
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
+
+    for sprite in moving_objects:
+        try:
+            sprite.speed = abs(sprite.speed) 
+        except:
+            continue
 
     pygame.draw.circle(screen, island.color, island.position, 30)
 
@@ -132,23 +192,29 @@ while running:
     if keys[pygame.K_d]:
         velocity[0] -= shift
 
+    if keys[pygame.K_SPACE]:
+        bulletFire()
+
+    bulletUpdate()
+
     for sprite in moving_objects:
         sprite.shiftPositionX(velocity[0])
         sprite.shiftPositionY(velocity[1])
+
         if pygame.sprite.collide_rect(player, sprite):
-            try:
-                if player.health > sprite.health:
-                    print("collision")
-                else:
-                    print("player dead")
-            except:
-                print("nope")
+            if type(sprite) in ship_types:
+                sprite.shiftPositionX(-velocity[0])
+                sprite.shiftPositionY(-velocity[1])
+                sprite.speed *= -1
+            if type(sprite) == Island:
+                gold += 1
 
 
     for enemy in enemies:
         if math.hypot((enemy.xpos-player.xpos), (enemy.ypos-player.ypos)) <= enemy_range:
-            print("Chase")
+            #print("Chase")
             enemy.chase(player)
+    
 
     velocity[0] *= 0.9
     velocity[1] *= 0.9
@@ -169,6 +235,8 @@ while running:
 
     pygame.draw.circle(minimap, "red", (int(0.1*(minimap_pos_x + (minimap_width / screen_width))), int(0.1*(minimap_pos_y - (minimap_height / screen_height)))), 5)
     screen.blit(minimap, minimap_rect) 
+ 
+    writeToScreen(screen, "Current Gold: {}".format(gold), font_size, screen_width - 300, 20)
 
     pygame.display.flip()
 
