@@ -6,10 +6,10 @@ from Island import Island
 from playership import PlayerShip
 from home import Home
 from bullets import Bullet
-# from grape import Grape
-# from jugger import Jugger
-# from rammer import Rammer
-# from finalboss import FinalBoss
+from grape import Grape
+from jugger import Jugger
+from rammer import Rammer
+from finalboss import FinalBoss
 
 pygame.init()
 
