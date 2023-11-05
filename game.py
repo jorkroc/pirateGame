@@ -347,7 +347,6 @@ while running:
 
     for enemy in all_enemies:
         if math.hypot((enemy.xpos-player.xpos), (enemy.ypos-player.ypos)) <= enemy_range:
-            print("Chase")
             enemy.chase(player)
         # print(int(enemy.health))
         # print(int(enemy.health)<=0)
