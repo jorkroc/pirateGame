@@ -1,7 +1,7 @@
 import pygame
 
 class Bullet(pygame.sprite.Sprite):
-    def __init__(self, x, y, speed, friendly):
+    def __init__(self, x, y, speed, friendly, damage):
         super().__init__()
         self.image = pygame.Surface((10, 10))
         self.image.fill((255,255,255))
@@ -11,6 +11,8 @@ class Bullet(pygame.sprite.Sprite):
         self.life=0
         self.friendly=friendly
         self.speed=speed
+        self.damage=damage
+        self.active=True
 
     def update(self):
         self.rect.x+=self.speed
