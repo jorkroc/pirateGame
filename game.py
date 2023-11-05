@@ -148,10 +148,14 @@ for i in range(num_enemies//4):
     moving_objects.append(enemy)
     enemies.append(enemy)
 
+enemyGroup=pygame.sprite.Group()
+for enemy in enemies:
+    enemyGroup.add(enemy)
 finalboss = FinalBoss(finalbossX, finalbossY, enemy_speed)
 all_sprites_list.add(finalboss)
 moving_objects.append(finalboss)
 enemies.append(finalboss)
+
 
 ship_types = [Grape, Ship, Rammer, Jugger, FinalBoss]
 
@@ -186,13 +190,13 @@ def bulletFire():
         global bulletList
         global moving_objects
         global all_sprites_list
-        bullet = Bullet(0,0, 5, True)
+        bullet = Bullet(5, True, 5)
         bulletList.append(bullet)
         moving_objects.append(bullet)
         all_sprites_list.add(bullet)
-
 def bulletUpdate():
     global bulletList
+    global enemyGroup
     for bullet in bulletList:
         bullet.update()
         count=0
@@ -200,6 +204,17 @@ def bulletUpdate():
             count+=1
             bullet.kill()
             del bullet
+        elif bullet.active and bullet.friendly:
+            for enemy in pygame.sprite.spritecollide(bullet, enemyGroup, False):
+                #enemy.health-=bullet.damage
+                print("heya")
+                bullet.active=False
+                bullet.kill()
+                
+        elif bullet.active and not bullet.friendly and collide_rect(player, bullet):
+            player.health-=bullet.damage
+            bullet.active=False
+            bullet.kill()
         bulletList=bulletList[count:]
 while running:
 

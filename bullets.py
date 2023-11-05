@@ -1,5 +1,6 @@
 import pygame
 
+
 class Bullet(pygame.sprite.Sprite):
     def __init__(self, speed, friendly, damage):
         super().__init__()
@@ -14,15 +15,19 @@ class Bullet(pygame.sprite.Sprite):
         self.damage=damage
         self.active=True
 
+
     def update(self):
         self.rect.x+=self.speed
         self.position.x+=self.speed
         self.life+=1
 
+
     def shiftPositionX(self, shift):
         self.position.x += shift
         self.rect.center=self.position
-    
+   
     def shiftPositionY(self, shift):
         self.position.y += shift
         self.rect.center=self.position
+
+
