@@ -271,16 +271,19 @@ def bulletUpdate():
     global bulletList
     global enemyGroup
     count=0
-    for bullet in bulletList:
+    bullet2=[]
+    indices=[]
+    for index, bullet in enumerate(bulletList):
         bullet.update()
-        count=0
         if bullet.friendly and bullet.life>10*player.bullet_range+10:
             count+=1
             bullet.kill()
             del bullet
+            indices=indices+[index]
         elif bullet.life>100:
             bullet.kill()
             del bullet
+            indices=indices+[index]
         elif bullet.active and bullet.friendly:
             for index, enemy in enumerate(pygame.sprite.spritecollide(bullet, enemyGroup, False)):
                 enemy.health-=bullet.damage
@@ -294,13 +297,19 @@ def bulletUpdate():
                     break
                 bullet.active=False
                 bullet.kill()
+                del bullet
+                indices=indices+[index]
                 
         elif bullet.active and not bullet.friendly and pygame.sprite.collide_rect(player, bullet):
             player.health-=bullet.damage
             bullet.active=False
             bullet.kill()
             del bullet
-    bulletList=bulletList[count:]
+            indices=indices+[index]
+    for i in bulletList:
+        if i not in indices:
+            bullet2=bullet2+[i]
+    bulletList=bullet2
 def enemyFire(ship):
 
     if ship.type==1 and random.randint(0,400)<5:
