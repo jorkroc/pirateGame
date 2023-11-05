@@ -170,7 +170,7 @@ while running:
         try:
             sprite.speed = abs(sprite.speed) 
         except:
-            pass
+            continue
 
     pygame.draw.circle(screen, island.color, island.position, 30)
 
@@ -192,28 +192,11 @@ while running:
     for sprite in moving_objects:
         sprite.shiftPositionX(velocity[0])
         sprite.shiftPositionY(velocity[1])
-<<<<<<< HEAD
         if pygame.sprite.collide_rect(player, sprite):
             sprite.shiftPositionX(-velocity[0])
             sprite.shiftPositionY(-velocity[1])
             sprite.speed *= -1
-            # try:
-            #     if player.health > sprite.health:
-            #         print("collision")
-            #     else:
-            #         print("player dead")
-            # except:
-            #     print("nope")
 
-
-=======
-        if type(sprite) == Ship:
-            if player.health > sprite.health:
-                moving_objects.remove(sprite)
-                all_sprites_list.remove(sprite)
-            else:
-                print("player dead")
->>>>>>> c50047da2e9d79ea4d1a79ec6b12207bd21bd049
 
     for enemy in enemies:
         if math.hypot((enemy.xpos-player.xpos), (enemy.ypos-player.ypos)) <= enemy_range:
