@@ -10,7 +10,10 @@ from grape import Grape
 from jugger import Jugger
 from rammer import Rammer
 from finalboss import FinalBoss
+from endwall import Endwall
 import time
+import numpy as np
+
 
 pygame.init()
 
@@ -36,7 +39,6 @@ num_enemies = 100
 enemy_speed = 5
 enemy_range = 200
 
-gold = 0
 font_size = 20
 font = pygame.font.SysFont('Courier New', font_size)
 black = (0, 0, 0)
@@ -73,8 +75,8 @@ for j in range (8):
     for i in range(-100, 100):
         x = 80*i
         w = 80*j
-        border1 = Island(pygame.Vector2(x, -6500-w), "black", 0)
-        border2 = Island(pygame.Vector2(x, 7000+w), "black", 0)
+        border1 = Endwall(pygame.Vector2(x, -6500-w), "black")
+        border2 = Endwall(pygame.Vector2(x, 7000+w), "black")
         all_sprites_list.add(border1)
         moving_objects.append(border1)
         all_sprites_list.add(border2)
@@ -82,8 +84,8 @@ for j in range (8):
 
     for i in range(-100, 100):
         y = 80*i
-        border1 = Island(pygame.Vector2(-6000-w, y), "black", 0)
-        border2 = Island(pygame.Vector2(7500+w, y), "black", 0)
+        border1 = Endwall(pygame.Vector2(-6000-w, y), "black")
+        border2 = Endwall(pygame.Vector2(7500+w, y), "black")
         all_sprites_list.add(border1)
         moving_objects.append(border1)
         all_sprites_list.add(border2)
@@ -169,6 +171,23 @@ def writeToScreen(screen, text, font_size, x, y, bg=True):
         else:
             screen.blit(letters_nobg[char], (x + i * font_size / 2, y))
 
+def parseOption(option, player):
+    if option != 0:
+        player.gold -= 1
+    if option == 1:
+        player.max_health += 1
+    elif option == 2:
+        player.speed += 1
+    elif option == 3:
+        player.bullet_speed += 1
+    elif option == 4:
+        player.rate_of_fire += 1
+    elif option == 5:
+        player.damage += 1
+    elif option == 6:
+        player.bullet_range += 1
+    
+
 def drawUpgradeMenu(screen, font_size):
     w, h = 600, 600
     sw, sh = screen.get_width(), screen.get_height()
@@ -197,7 +216,7 @@ def drawUpgradeMenu(screen, font_size):
         for i, stat in enumerate(stats):
             bhtext = "Increase {}".format(stat)
             bhw, bhh = len(bhtext) * font_size / 2, font_size
-            if tlx + bhx <= mx <= tlx + bhx + bhw + 2 * pad and tly + bhy <= my <= tly + bhy + bhh + 2 * pad:
+            if tlx + bhx <= mx <= tlx + bhx + bhw + 2 * pad and tly + bhy <= my <= tly + bhy + i * (font_size + pad * 2 + pad2) + bhh + pad * 2:
                 return i + 1
 
     return 0
@@ -294,11 +313,16 @@ while running:
                     sprite.health -= 1
                 elif not player.ramming and sprite.ramming:
                     player.health -= 1
-            if type(sprite) == Island:
+            if (type(sprite) == Island):
                 for sprite in moving_objects:
                     sprite.shiftPositionX(-velocity[0])
                     sprite.shiftPositionY(-velocity[1])
-                gold += 1
+                player.gold += 1
+                touchingIsland = True
+            if (type(sprite) == Endwall):
+                for sprite in moving_objects:
+                    sprite.shiftPositionX(-velocity[0])
+                    sprite.shiftPositionY(-velocity[1])
                 touchingIsland = True
             if type(sprite) == Home:
                 at_home = True
@@ -311,6 +335,21 @@ while running:
 
     velocity[0] *= 0.9
     velocity[1] *= 0.9
+
+    if not (velocity[0]==0 and velocity[1]==0):
+        if (velocity[0]==0):
+            if velocity[1]>0:
+                angle=90
+            else:
+                angle=-90
+        elif velocity[0]<0:
+            angle=np.degrees(np.arctan(-velocity[1]/velocity[0]))
+        else:
+            angle=np.degrees(np.arctan(-velocity[1]/velocity[0]))+180
+        if angle<0:
+            angle=(90-(angle*-1))+270
+        angle=round(angle/45)%8
+        player.updateDir(angle)
 
     screen.fill("blue")
     minimap.fill((255, 255, 255))
@@ -332,18 +371,33 @@ while running:
     if at_home:
         player.health = player.max_health
         option = drawUpgradeMenu(screen, font_size)
-        if option == 1 and not bought:
-            gold -= 1
-            player.max_health += 1
+        if not bought:
+            parseOption(option, player)
         
         if option == 0:
             bought = False
         else:
             bought = True
     
-    writeToScreen(screen, "Gold: {}".format(gold), font_size, screen_width - 250, 20)
-    writeToScreen(screen, "{}/{}".format(truncate(player.health), player.max_health), font_size, screen_width - 250, 60)
 
+    # draw stats
+    show_stats = ["gold", "health", "speed", "bullet speed", "rate of fire", "damage", "bullet range"]
+    stat_map = {
+        "gold":player.gold,
+        "speed":player.speed,
+        "bullet speed":player.bullet_speed,
+        "rate of fire":player.rate_of_fire,
+        "damage":player.damage,
+        "bullet range":player.bullet_range
+    }
+    stat_x = screen_width - 250
+    pad = 20
+    dis = font_size + pad
+    for i, stat in enumerate(show_stats):
+        if stat == "health":
+            writeToScreen(screen, "{}/{}".format(truncate(player.health), player.max_health), font_size, stat_x, dis * i + pad)
+        else:
+            writeToScreen(screen, "{}: {}".format(stat, stat_map[stat]), font_size, stat_x, dis * i + pad)
     pygame.display.flip()
 
     dt = clock.tick(60) / 1000

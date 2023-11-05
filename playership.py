@@ -14,7 +14,12 @@ class PlayerShip(ship.Ship):
         self.health = 100
         self.max_health = 100
         self.ramming = False
+        self.gold = 0
         self.territory = Territory.SAFE
+        self.direction=0
+    
+
+
     
     def updateTerr(self,width,height):
         if width/4>self.xpos and height/3<self.ypos:
@@ -25,3 +30,7 @@ class PlayerShip(ship.Ship):
             self.territory=Territory.JUGGERNAUT
         else:
             self.territory=Territory.ROYAL
+
+
+    def updateDir(self,direction):
+        self.direction=direction
