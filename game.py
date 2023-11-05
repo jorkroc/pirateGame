@@ -414,7 +414,11 @@ while running:
                 sprite.image = pygame.image.load('images/ram.png').convert_alpha()
             else:
                 sprite.image = pygame.image.load('images/ram_left.png').convert_alpha()
-
+        if (type(sprite) is Ship):
+            if (sprite.xpos < 1280/2):
+                sprite.image = pygame.image.load('images/stand_boat.png').convert_alpha()
+            else:
+                sprite.image = pygame.image.load('images/stand_boat_left.png').convert_alpha()
     # draw stats
     show_stats = ["gold", "health", "speed", "bullet speed", "rate of fire", "damage", "bullet range"]
     stat_map = {
