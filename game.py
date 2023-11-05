@@ -36,15 +36,14 @@ enemy_speed = 5
 enemy_range = 200
 
 gold = 0
-font = pygame.font.SysFont('timesnewroman', 30)
+font_size = 30
+font = pygame.font.SysFont('Courier New', font_size)
 black = (0, 0, 0)
+white = (255, 255, 255)
 letters = {}
-for i in range(26):
-    char = chr(ord('a') + i)
-    letters[char] = font.render(char, False, black)
-for i in range(26):
-    char = chr(ord('A') + i)
-    letters[char] = font.render(char, False, black)
+for i in range(32, 127):
+    char = chr(i)
+    letters[char] = font.render(char, False, black, white)
 
 screen = pygame.display.set_mode((screen_width, screen_height))
 pygame.display.set_caption(title)
@@ -132,6 +131,10 @@ all_sprites_list.add(finalboss)
 moving_objects.append(finalboss)
 enemies.append(finalboss)
 
+def writeToScreen(screen, text, font_size, x, y):
+    for i, char in enumerate(text):
+        screen.blit(letters[char], (x + i * font_size / 2, y))
+
 # PLAYER HAS TO BE THE LAST ADDED
 all_sprites_list.add(player)
 while running:
@@ -186,9 +189,10 @@ while running:
     screen.blit(minimap, minimap_rect)
     
     all_sprites_list.draw(screen) 
-    #screen.blit(letters['a'], (300, 300))
+    writeToScreen(screen, "Current Gold: {}".format(gold), font_size, 600, 600)
 
     pygame.display.flip()
+    gold += 1
 
     dt = clock.tick(60) / 1000
 
