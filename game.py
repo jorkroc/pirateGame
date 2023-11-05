@@ -11,6 +11,8 @@ from jugger import Jugger
 from rammer import Rammer
 from finalboss import FinalBoss
 import time
+import numpy as np
+
 
 pygame.init()
 
@@ -305,6 +307,21 @@ while running:
 
     velocity[0] *= 0.9
     velocity[1] *= 0.9
+
+    if not (velocity[0]==0 and velocity[1]==0):
+        if (velocity[0]==0):
+            if velocity[1]>0:
+                angle=90
+            else:
+                angle=-90
+        elif velocity[0]<0:
+            angle=np.degrees(np.arctan(-velocity[1]/velocity[0]))
+        else:
+            angle=np.degrees(np.arctan(-velocity[1]/velocity[0]))+180
+        if angle<0:
+            angle=(90-(angle*-1))+270
+        angle=round(angle/45)%8
+        player.updateDir(angle)
 
     screen.fill("blue")
     minimap.fill((255, 255, 255))
