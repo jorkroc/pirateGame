@@ -10,6 +10,7 @@ from grape import Grape
 from jugger import Jugger
 from rammer import Rammer
 from finalboss import FinalBoss
+import time
 
 pygame.init()
 
@@ -22,15 +23,15 @@ title = "Pirate Game"
 finalbossX = 100
 finalbossY = 100
 
-minimap_width = 150
+minimap_width = 100
 minimap_height = 100
 minimap = pygame.Surface((minimap_width, minimap_height))
 minimap_rect = minimap.get_rect()
 minimap_rect.topleft = (10, 10)
 minimap_pos_x = (screen_width/2 * (minimap_width / screen_width))/0.1
-minimap_pos_y = (screen_height/2 * (minimap_width / screen_width))/0.1
+minimap_pos_y = (screen_height/2 * (minimap_height / screen_height))/0.1
 
-num_islands = 50
+num_islands = 500
 num_enemies = 10
 enemy_speed = 5
 enemy_range = 200
@@ -95,10 +96,14 @@ for i in range(num_enemies//4):
     randX = random.randint(-map_width//10, map_width//10)*10
     randY = random.randint(-map_width//10, map_width//10)*10
 <<<<<<< HEAD
+<<<<<<< HEAD
     enemy = Jugger(randX, randY, enemy_speed) 
 =======
     enemy = Jagger(randX, randY, enemy_speed)
 >>>>>>> parent of e83d837 ('Jagger')
+=======
+    enemy = Jugger(randX, randY, enemy_speed)
+>>>>>>> 32d6834a9626a4c3935a75c79c9ffa278060d5d4
     while pygame.sprite.collide_rect(home, enemy) or pygame.sprite.collide_rect(player,enemy):
         randX = random.randint(-map_width//10, map_width//10)*10
         randY = random.randint(-map_width//10, map_width//10)*10
@@ -136,6 +141,8 @@ all_sprites_list.add(finalboss)
 moving_objects.append(finalboss)
 enemies.append(finalboss)
 
+ship_types = [Grape, Ship, Rammer, Jugger, FinalBoss]
+
 def writeToScreen(screen, text, font_size, x, y):
     for i, char in enumerate(text):
         screen.blit(letters[char], (x + i * font_size / 2, y))
@@ -144,15 +151,20 @@ def writeToScreen(screen, text, font_size, x, y):
 all_sprites_list.add(player)
 
 
-
+lastFire=-1
 def bulletFire():
-    global bulletList
-    global moving_objects
-    global all_sprites_list
-    bullet = Bullet(0,0)
-    bulletList.append(bullet)
-    moving_objects.append(bullet)
-    all_sprites_list.add(bullet)
+    global lastFire
+    newTime=time.time()
+    elapsed=newTime-lastFire
+    if elapsed>1:
+        lastFire=newTime
+        global bulletList
+        global moving_objects
+        global all_sprites_list
+        bullet = Bullet(0,0)
+        bulletList.append(bullet)
+        moving_objects.append(bullet)
+        all_sprites_list.add(bullet)
 
 def bulletUpdate():
     global bulletList
@@ -169,6 +181,10 @@ while running:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
+
+    for sprite in moving_objects:
+        if type(sprite) == Ship:
+            sprite.speed = abs(sprite.speed) 
 
     pygame.draw.circle(screen, island.color, island.position, 30)
 
@@ -190,16 +206,22 @@ while running:
     for sprite in moving_objects:
         sprite.shiftPositionX(velocity[0])
         sprite.shiftPositionY(velocity[1])
-        if type(sprite) == Ship:
-            if player.health > sprite.health:
-                moving_objects.remove(sprite)
-                all_sprites_list.remove(sprite)
-            else:
-                print("player dead")
+
+        if pygame.sprite.collide_rect(player, sprite):
+            if type(sprite) in ship_types:
+                sprite.shiftPositionX(-velocity[0])
+                sprite.shiftPositionY(-velocity[1])
+                sprite.speed *= -1
+            if type(sprite) == Island:
+                for sprite in moving_objects:
+                    sprite.shiftPositionX(-velocity[0])
+                    sprite.shiftPositionY(-velocity[1])
+                gold += 1
+
 
     for enemy in enemies:
         if math.hypot((enemy.xpos-player.xpos), (enemy.ypos-player.ypos)) <= enemy_range:
-            print("Chase")
+            #print("Chase")
             enemy.chase(player)
     
 
@@ -207,16 +229,23 @@ while running:
     velocity[1] *= 0.9
 
     screen.fill("blue")
-    minimap.fill((255, 255, 255))  # Clear the minimap
-    #self.position.x += shift
-    #self.rect.center=self.position
+    minimap.fill((255, 255, 255))
+
+    all_sprites_list.draw(screen)
+
+    #for minimap
     minimap_pos_x -= velocity[0] * (minimap_width / screen_width)
     minimap_pos_y -= velocity[1] * (minimap_width / screen_width)
 
+    pygame.draw.rect(minimap, "black", pygame.Rect(0, 33, 25, 67))  
+    pygame.draw.rect(minimap, "green", pygame.Rect(60, 0, 40, 50))
+    pygame.draw.rect(minimap, "purple", pygame.Rect(40, 67, 60, 33))
+    pygame.draw.rect(minimap, "grey", pygame.Rect(25, 10, 10, 10))
+
+    if (not )
     pygame.draw.circle(minimap, "red", (int(0.1*(minimap_pos_x + (minimap_width / screen_width))), int(0.1*(minimap_pos_y - (minimap_height / screen_height)))), 5)
-    screen.blit(minimap, minimap_rect)
-    
-    all_sprites_list.draw(screen) 
+    screen.blit(minimap, minimap_rect) 
+ 
     writeToScreen(screen, "Current Gold: {}".format(gold), font_size, screen_width - 300, 20)
 
     pygame.display.flip()
