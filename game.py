@@ -15,7 +15,7 @@ from waves import Waves
 import time
 import numpy as np
 
-
+wait=False
 pygame.init()
 
 screen_width = 1280
@@ -290,6 +290,7 @@ def bulletUpdate():
                 if enemy.health<=0:
                     global enemies
                     enemy.kill()
+                    player.gold+=20
                     del enemy
                     enemies=enemies[:index]+enemies[index+1:]
                     break
@@ -506,13 +507,15 @@ while running:
     if player.health <= 0:
         writeToScreen(screen, "You're Dead lmaoooooooo", font_size, screen_width / 2 - 80, screen_height / 2 - 15)
         running=False
+        wait=True
     if finalboss.health <= 0:
         writeToScreen(screen, "You Win!", font_size, screen_width / 2 - 60, screen_height / 2 - 15)
-
     pygame.display.flip()
 
     dt = clock.tick(60) / 1000
 
     shift = player.speed
-time.sleep(5)
+if wait:
+    time.sleep(5)
+
 pygame.quit()
