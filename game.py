@@ -216,7 +216,7 @@ def bulletFire():
         global bulletList
         global moving_objects
         global all_sprites_list
-        bullet = Bullet(5, True, 5)
+        bullet = Bullet(5, True, 5,0)
         bulletList.append(bullet)
         moving_objects.append(bullet)
         all_sprites_list.add(bullet)
