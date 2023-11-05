@@ -262,8 +262,11 @@ def bulletUpdate():
     for bullet in bulletList:
         bullet.update()
         count=0
-        if bullet.life>10*player.bullet_range+10:
+        if bullet.friendly and bullet.life>10*player.bullet_range+10:
             count+=1
+            bullet.kill()
+            del bullet
+        elif bullet.life>100:
             bullet.kill()
             del bullet
         elif bullet.active and bullet.friendly:
@@ -272,7 +275,6 @@ def bulletUpdate():
                 print(enemy.health)
                 if enemy.health<=0:
                     global enemies
-                    print("hey")
                     enemy.kill()
                     del enemy
                     enemies=enemies[:index]+enemies[index+1:]
@@ -285,6 +287,29 @@ def bulletUpdate():
             bullet.active=False
             bullet.kill()
     bulletList=bulletList[count:]
+
+
+
+def enemyFire(ship):
+
+    if ship.type==1 and random.randint(0,400)<5:
+        for i in range(8):    
+            bullet = Bullet(3,False,4,9,ship.xpos,ship.ypos)
+            bulletList.append(bullet)
+            moving_objects.append(bullet)
+            all_sprites_list.add(bullet)
+
+    elif ship.type==2 and random.randint(0,400)<4:
+        bullet=Bullet(5,False,24,9,ship.xpos,ship.ypos)
+        bulletList.append(bullet)
+        moving_objects.append(bullet)
+        all_sprites_list.add(bullet)
+    elif ship.type==3 and random.randint(0,400)<6:
+        bullet=Bullet(4,False,10,9,ship.xpos,ship.ypos)
+        bulletList.append(bullet)
+        moving_objects.append(bullet)
+        all_sprites_list.add(bullet)
+    
 
 all_enemies = enemies
 while running:
@@ -347,6 +372,10 @@ while running:
     for enemy in all_enemies:
         if math.hypot((enemy.xpos-player.xpos), (enemy.ypos-player.ypos)) <= enemy_range:
             enemy.chase(player)
+        if abs(1280/2-enemy.xpos)<400 and abs(720/2-enemy.ypos)<400:
+            enemyFire(enemy)
+    
+    
 
     velocity[0] *= 0.9
     velocity[1] *= 0.9
