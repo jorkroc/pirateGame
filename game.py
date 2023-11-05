@@ -151,7 +151,7 @@ def drawUpgradeMenu(screen, font_size):
     bg.set_alpha(128)
     bg.fill((255, 255, 255))
     screen.blit(bg, ((sw - w) / 2, (sh - h) / 2))
-    writeToScreen(screen, "Love you <3", font_size, 400, 400, False)
+    writeToScreen(screen, "Love you <3", font_size, 400, 200, False)
     if pygame.mouse.get_pressed()[0]:
         print(pygame.mouse.get_pos())
 
@@ -260,9 +260,10 @@ while running:
 
     if at_home:
         drawUpgradeMenu(screen, font_size)
+        player.health = player.max_health
  
     writeToScreen(screen, "Gold: {}".format(gold), font_size, screen_width - 250, 20)
-    writeToScreen(screen, "Health: {}".format(player.health), font_size, screen_width - 250, 60)
+    writeToScreen(screen, "{}/{}".format(player.health, player.max_health), font_size, screen_width - 250, 60)
 
     pygame.display.flip()
 

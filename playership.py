@@ -12,6 +12,7 @@ class PlayerShip(ship.Ship):
     def __init__(self, xpos, ypos):
         super().__init__("red", 40, 40, xpos, ypos, 0)
         self.health = 100
+        self.max_health = 100
         self.territory = Territory.SAFE
     
     def updateTerr(self,width,height):
