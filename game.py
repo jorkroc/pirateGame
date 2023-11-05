@@ -269,7 +269,7 @@ def bulletUpdate():
                 bullet.active=False
                 bullet.kill()
                 
-        elif bullet.active and not bullet.friendly and collide_rect(player, bullet):
+        elif bullet.active and not bullet.friendly and pygame.sprite.collide_rect(player, bullet):
             player.health-=bullet.damage
             bullet.active=False
             bullet.kill()
