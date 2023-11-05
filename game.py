@@ -11,6 +11,7 @@ from jugger import Jugger
 from rammer import Rammer
 from finalboss import FinalBoss
 from endwall import Endwall
+from waves import Waves
 import time
 import numpy as np
 
@@ -35,9 +36,11 @@ minimap_pos_x = (screen_width/2 * (minimap_width / screen_width))/0.1
 minimap_pos_y = (screen_height/2 * (minimap_height / screen_height))/0.1
 
 num_islands = 150
+max_loot = 3
 num_enemies = 50
 enemy_speed = 10
 enemy_range = 200
+num_waves = 600
 
 font_size = 25
 font = pygame.font.SysFont('Courier New', font_size)
@@ -150,18 +153,26 @@ moving_objects.append(finalboss)
 enemies.append(finalboss)
 
 for i in range(num_islands):
-    randX = random.randint(-int(map_width/2), int(map_width/2))
-    randY = random.randint(-int(map_width/2), int(map_width/2))
+    randX = random.randint(-int(map_width/2), int(map_width/2))/1.05 + 600
+    randY = random.randint(-int(map_width/2), int(map_width/2))/1.05 + 300
     position = pygame.Vector2(randX, randY)
-    island = Island(position, "yellow", random.randint(10, 100))
+    island = Island(position, "yellow", random.randint(0, max_loot))
     while pygame.sprite.collide_rect(home, island) or pygame.sprite.collide_rect(player, island):
-        randX = random.randint(-int(map_width/2), int(map_width/2))
-        randY = random.randint(-int(map_width/2), int(map_width/2))
+        randX = random.randint(-int(map_width/2), int(map_width/2))/1.05 + 600
+        randY = random.randint(-int(map_width/2), int(map_width/2))/1.05 + 300
         position = pygame.Vector2(randX, randY)
         island = Island(position, "yellow", random.randint(10, 100))
     all_sprites_list.add(island)
     moving_objects.append(island)
 
+#for waves
+for i in range(num_waves):
+    randX = random.randint(-int(map_width/2), int(map_width/2))/1.05 + 600
+    randY = random.randint(-int(map_width/2), int(map_width/2))/1.05 + 300
+    position = pygame.Vector2(randX, randY)
+    wave = Waves(position, "grey")
+    all_sprites_list.add(wave)
+    moving_objects.append(wave)
 
 ship_types = [Grape, Ship, Rammer, Jugger, FinalBoss]
 
