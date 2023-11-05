@@ -149,6 +149,7 @@ for enemy in enemies:
     enemyGroup.add(enemy)
 finalboss = FinalBoss(finalbossX, finalbossY, enemy_speed)
 all_sprites_list.add(finalboss)
+enemyGroup.add(finalboss)
 moving_objects.append(finalboss)
 enemies.append(finalboss)
 
@@ -287,6 +288,7 @@ def bulletUpdate():
         elif bullet.active and bullet.friendly:
             for index, enemy in enumerate(pygame.sprite.spritecollide(bullet, enemyGroup, False)):
                 enemy.health-=bullet.damage
+                print(enemy.type)
                 if enemy.health<=0:
                     global enemies
                     enemy.kill()
