@@ -95,7 +95,7 @@ for i in range(num_enemies%4):
 for i in range(num_enemies//4):
     randX = random.randint(-map_width//10, map_width//10)*10
     randY = random.randint(-map_width//10, map_width//10)*10
-    enemy = Jagger(randX, randY, enemy_speed)
+    enemy = Jugger(randX, randY, enemy_speed)
     while pygame.sprite.collide_rect(home, enemy) or pygame.sprite.collide_rect(player,enemy):
         randX = random.randint(-map_width//10, map_width//10)*10
         randY = random.randint(-map_width//10, map_width//10)*10
