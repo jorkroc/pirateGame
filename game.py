@@ -264,9 +264,16 @@ def bulletUpdate():
             bullet.kill()
             del bullet
         elif bullet.active and bullet.friendly:
-            for enemy in pygame.sprite.spritecollide(bullet, enemyGroup, False):
+            for index, enemy in enumerate(pygame.sprite.spritecollide(bullet, enemyGroup, False)):
                 enemy.health-=bullet.damage
-                print("heya")
+                print(enemy.health)
+                if enemy.health<=0:
+                    global enemies
+                    print("hey")
+                    enemy.kill()
+                    del enemy
+                    enemies=enemies[:index]+enemies[index+1:]
+                    break
                 bullet.active=False
                 bullet.kill()
                 
@@ -339,11 +346,16 @@ while running:
         if math.hypot((enemy.xpos-player.xpos), (enemy.ypos-player.ypos)) <= enemy_range:
             #print("Chase")
             enemy.chase(player)
-        if enemy.health<=0:
-            enemy.kill()
-            del enemy
-        else:
-            enemies2=enemies2+[enemy]
+        # print(int(enemy.health))
+        # print(int(enemy.health)<=0)
+        # print(int(enemy.health))
+        # if enemy.health<=0:
+        #     for u in range(99):
+        #         print("baba")
+        #     enemy.kill()
+        #     del enemy
+        # else:
+        #     enemies2=enemies2+[enemy]
     enemies=enemies2
     
     
