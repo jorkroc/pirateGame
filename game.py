@@ -55,7 +55,7 @@ dt = 0
 shift = 1
 velocity = [0,0]
 
-all_sprites_list = pygame.sprite.Group() 
+all_sprites_list = pygame.sprite.Group()
 bulletList = []
 moving_objects = []
 
@@ -77,7 +77,7 @@ for i in range(num_islands):
         position = pygame.Vector2(randX, randY)*10
         island = Island(position, "yellow", random.randint(10, 100))
     all_sprites_list.add(island)
-    moving_objects.append(island) 
+    moving_objects.append(island)
 
 enemies = []
 for i in range(num_enemies%4):
@@ -195,6 +195,8 @@ while running:
 
     bulletUpdate()
 
+    touchingIsland = False
+
     for sprite in moving_objects:
         sprite.shiftPositionX(velocity[0])
         sprite.shiftPositionY(velocity[1])
@@ -209,6 +211,8 @@ while running:
                     sprite.shiftPositionX(-velocity[0])
                     sprite.shiftPositionY(-velocity[1])
                 gold += 1
+                touchingIsland = True
+            
 
 
     for enemy in enemies:
@@ -226,13 +230,14 @@ while running:
     all_sprites_list.draw(screen)
 
     #for minimap
-    minimap_pos_x -= velocity[0] * (minimap_width / screen_width)
-    minimap_pos_y -= velocity[1] * (minimap_width / screen_width)
+    if (not touchingIsland):
+        minimap_pos_x -= velocity[0] * (minimap_width / screen_width)
+        minimap_pos_y -= velocity[1] * (minimap_width / screen_width)
 
     pygame.draw.rect(minimap, "black", pygame.Rect(0, 33, 25, 67))  
     pygame.draw.rect(minimap, "green", pygame.Rect(60, 0, 40, 50))
     pygame.draw.rect(minimap, "purple", pygame.Rect(40, 67, 60, 33))
-    pygame.draw.rect(minimap, "grey", pygame.Rect(20, 10, 20, 10))
+    pygame.draw.rect(minimap, "grey", pygame.Rect(25, 10, 10, 10))
 
     pygame.draw.circle(minimap, "red", (int(0.1*(minimap_pos_x + (minimap_width / screen_width))), int(0.1*(minimap_pos_y - (minimap_height / screen_height)))), 5)
     screen.blit(minimap, minimap_rect) 
