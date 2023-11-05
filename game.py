@@ -171,6 +171,9 @@ def drawUpgradeMenu(screen, font_size):
     bg.set_alpha(128)
     bg.fill((255, 255, 255))
 
+    def button(bx, by, pad, text):
+        bw, bh = len(text) * font_size / 2, font_size
+
     bhx, bhy = 200, 200
     pad = 15
     buy_health_text = "Increase Max Health"
