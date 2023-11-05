@@ -57,9 +57,6 @@ running = True
 dt = 0
 bought = False
 
-shift = 1
-velocity = [0,0]
-
 all_sprites_list = pygame.sprite.Group()
 bulletList = []
 moving_objects = []
@@ -67,6 +64,8 @@ moving_objects = []
 player = PlayerShip(screen.get_width()/2, screen.get_height()/2)
 home = Home()
 player.health = 100
+shift = player.speed
+velocity = [0,0]
 
 all_sprites_list.add(home)
 moving_objects.append(home)
@@ -177,7 +176,7 @@ def parseOption(option, player):
     if option == 1:
         player.max_health += 1
     elif option == 2:
-        player.speed += 1
+        player.speed += 0.1
     elif option == 3:
         player.bullet_speed += 1
     elif option == 4:
@@ -435,7 +434,7 @@ while running:
     show_stats = ["gold", "health", "speed", "bullet speed", "rate of fire", "damage", "bullet range"]
     stat_map = {
         "gold":player.gold,
-        "speed":player.speed,
+        "speed":round(player.speed,1),
         "bullet speed":player.bullet_speed,
         "rate of fire":player.rate_of_fire,
         "damage":player.damage,
@@ -452,5 +451,7 @@ while running:
     pygame.display.flip()
 
     dt = clock.tick(60) / 1000
+
+    shift = player.speed
 
 pygame.quit()
