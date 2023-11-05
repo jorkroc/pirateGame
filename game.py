@@ -73,6 +73,15 @@ velocity = [0,0]
 all_sprites_list.add(home)
 moving_objects.append(home)
 
+#for waves
+for i in range(num_waves):
+    randX = random.randint(-int(map_width/2), int(map_width/2))/1.05 + 600
+    randY = random.randint(-int(map_width/2), int(map_width/2))/1.05 + 300
+    position = pygame.Vector2(randX, randY)
+    wave = Waves(position, "grey")
+    all_sprites_list.add(wave)
+    moving_objects.append(wave)
+
 for j in range (8):
     for i in range(-100, 100):
         x = 80*i
@@ -165,15 +174,6 @@ for i in range(num_islands):
         island = Island(position, "yellow", random.randint(10, 100))
     all_sprites_list.add(island)
     moving_objects.append(island)
-
-#for waves
-for i in range(num_waves):
-    randX = random.randint(-int(map_width/2), int(map_width/2))/1.05 + 600
-    randY = random.randint(-int(map_width/2), int(map_width/2))/1.05 + 300
-    position = pygame.Vector2(randX, randY)
-    wave = Waves(position, "grey")
-    all_sprites_list.add(wave)
-    moving_objects.append(wave)
 
 ship_types = [Grape, Ship, Rammer, Jugger, FinalBoss]
 
@@ -502,18 +502,25 @@ while running:
     dis = font_size + pad
     for i, stat in enumerate(show_stats):
         if stat == "health":
-            writeToScreen(screen, "{}/{}".format(truncate(player.health), player.max_health), font_size, stat_x, dis * i + pad)
+            writeToScreen(screen, "health: {}/{}".format(truncate(player.health), player.max_health), font_size, stat_x, dis * i + pad)
         elif stat == "gold":
             writeToScreen(screen, "{}: {}".format(stat, (int)(player.gold)), font_size, stat_x, dis * i + pad)
         else:
             writeToScreen(screen, "{}: {}".format(stat, stat_map[stat]), font_size, stat_x, dis * i + pad)
     
     if player.health <= 0:
-        writeToScreen(screen, "You're Dead lmaoooooooo", font_size, screen_width / 2 - 80, screen_height / 2 - 15)
+        player.image = pygame.image.load('images/boat_dead.png').convert_alpha()
+        writeToScreen(screen, "You're Dead :(", font_size, screen_width / 2 - 80, screen_height / 2 + 50)
         running=False
         wait=True
     if finalboss.health <= 0:
-        writeToScreen(screen, "You Win!", font_size, screen_width / 2 - 60, screen_height / 2 - 15)
+        writeToScreen(screen, "You Win!", font_size, screen_width / 2 - 60, screen_height / 2 + 50)
+    
+    if (finalboss.xpos < 1280/2):
+        finalboss.image = pygame.image.load('images/final_boss.png').convert_alpha()
+    else:
+        finalboss.image = pygame.image.load('images/final_boss_left.png').convert_alpha()
+
     pygame.display.flip()
 
     dt = clock.tick(60) / 1000
