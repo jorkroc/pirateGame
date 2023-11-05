@@ -10,6 +10,7 @@ from grape import Grape
 from jugger import Jugger
 from rammer import Rammer
 from finalboss import FinalBoss
+import time
 
 pygame.init()
 
@@ -55,6 +56,7 @@ shift = 1
 velocity = [0,0]
 
 all_sprites_list = pygame.sprite.Group() 
+bulletList = []
 moving_objects = []
 
 player = PlayerShip(screen.get_width()/2, screen.get_height()/2)
@@ -139,11 +141,44 @@ def writeToScreen(screen, text, font_size, x, y):
 
 # PLAYER HAS TO BE THE LAST ADDED
 all_sprites_list.add(player)
+
+
+lastFire=-1
+def bulletFire():
+    global lastFire
+    newTime=time.time()
+    elapsed=newTime-lastFire
+    if elapsed>1:
+        lastFire=newTime
+        global bulletList
+        global moving_objects
+        global all_sprites_list
+        bullet = Bullet(0,0)
+        bulletList.append(bullet)
+        moving_objects.append(bullet)
+        all_sprites_list.add(bullet)
+
+def bulletUpdate():
+    global bulletList
+    for bullet in bulletList:
+        bullet.update()
+        count=0
+        if bullet.life>100:
+            count+=1
+            bullet.kill()
+            del bullet
+        bulletList=bulletList[count:]
 while running:
 
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
+
+    for sprite in moving_objects:
+        try:
+            sprite.speed = abs(sprite.speed) 
+        except:
+            pass
 
     pygame.draw.circle(screen, island.color, island.position, 30)
 
@@ -157,18 +192,36 @@ while running:
     if keys[pygame.K_d]:
         velocity[0] -= shift
 
+    if keys[pygame.K_SPACE]:
+        bulletFire()
+
+    bulletUpdate()
+
     for sprite in moving_objects:
         sprite.shiftPositionX(velocity[0])
         sprite.shiftPositionY(velocity[1])
+<<<<<<< HEAD
         if pygame.sprite.collide_rect(player, sprite):
-            print(type(sprite))
-            if type(sprite) in ship_types:
-                if player.health > sprite.health:
-                    moving_objects.remove(sprite)
-                    all_sprites_list.remove(sprite)
-            if type(sprite) == Island:
-                gold += 1
+            sprite.shiftPositionX(-velocity[0])
+            sprite.shiftPositionY(-velocity[1])
+            sprite.speed *= -1
+            # try:
+            #     if player.health > sprite.health:
+            #         print("collision")
+            #     else:
+            #         print("player dead")
+            # except:
+            #     print("nope")
 
+
+=======
+        if type(sprite) == Ship:
+            if player.health > sprite.health:
+                moving_objects.remove(sprite)
+                all_sprites_list.remove(sprite)
+            else:
+                print("player dead")
+>>>>>>> c50047da2e9d79ea4d1a79ec6b12207bd21bd049
 
     for enemy in enemies:
         if math.hypot((enemy.xpos-player.xpos), (enemy.ypos-player.ypos)) <= enemy_range:
