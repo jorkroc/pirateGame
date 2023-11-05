@@ -243,7 +243,11 @@ def bulletFire():
         global bulletList
         global moving_objects
         global all_sprites_list
-        bullet = Bullet(5, True, 5,0)
+        bullet = Bullet(player.bullet_speed, True, player.damage,player.direction)
+        bulletList.append(bullet)
+        moving_objects.append(bullet)
+        all_sprites_list.add(bullet)
+        bullet = Bullet(player.bullet_speed, True, player.damage,(player.direction+4)%8)
         bulletList.append(bullet)
         moving_objects.append(bullet)
         all_sprites_list.add(bullet)
@@ -269,6 +273,8 @@ def bulletUpdate():
             bullet.active=False
             bullet.kill()
         bulletList=bulletList[count:]
+
+
 while running:
 
     for event in pygame.event.get():
@@ -344,6 +350,7 @@ while running:
             angle=(90-(angle*-1))+270
         angle=round(angle/45)%8
         player.updateDir(angle)
+        #print(angle)
 
     screen.fill("blue")
     minimap.fill((255, 255, 255))
