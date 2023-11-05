@@ -1,4 +1,5 @@
 import pygame
+import random
 
 class Island(pygame.sprite.Sprite):
 
@@ -10,6 +11,11 @@ class Island(pygame.sprite.Sprite):
         self.position = position
         self.color = color
         self.treasure = treasure
+        
+        if (random.randint(0, 1) == 1):
+            self.image = pygame.image.load('images/island.png').convert_alpha()
+        else:
+            self.image = pygame.image.load('images/island_left.png').convert_alpha()
 
     def getPosition(self):
         return self.position
@@ -30,3 +36,6 @@ class Island(pygame.sprite.Sprite):
     
     def setTreasure(self, newTreasure):
         self.treasure = newTreasure
+
+    def direction(self):
+        return
