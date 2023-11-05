@@ -202,9 +202,12 @@ while running:
         sprite.shiftPositionY(velocity[1])
 
         if pygame.sprite.collide_rect(player, sprite):
-            sprite.shiftPositionX(-velocity[0])
-            sprite.shiftPositionY(-velocity[1])
-            sprite.speed *= -1
+            if type(sprite) in ship_types:
+                sprite.shiftPositionX(-velocity[0])
+                sprite.shiftPositionY(-velocity[1])
+                sprite.speed *= -1
+            if type(sprite) == Island:
+                gold += 1
 
 
     for enemy in enemies:
