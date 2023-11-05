@@ -36,8 +36,8 @@ minimap_pos_x = (screen_width/2 * (minimap_width / screen_width))/0.1
 minimap_pos_y = (screen_height/2 * (minimap_height / screen_height))/0.1
 
 num_islands = 150
-max_loot = 3
-num_enemies = 50
+max_loot = 10
+num_enemies = 100
 enemy_speed = 10
 enemy_range = 200
 num_waves = 600
@@ -135,11 +135,11 @@ for i in range(num_enemies//4):
 for i in range(num_enemies//4):
     randX = random.randint(-int(map_width/2), -int(map_width/2)+int(map_width/4))
     randY = random.randint(-int(map_height/2)+int(map_height/3), int(map_height/2))
-    enemy = Rammer(randX, randY, enemy_speed) 
+    enemy = Rammer(randX, randY, 3*enemy_speed) 
     while pygame.sprite.collide_rect(home, enemy) or pygame.sprite.collide_rect(player,enemy):
         randX = random.randint(-int(map_width/2), -int(map_width/2)+int(map_width/4))
         randY = random.randint(-int(map_height/2)+int(map_height/3), int(map_height/2))
-        enemy = Rammer(randX, randY, enemy_speed) 
+        enemy = Rammer(randX, randY, 3*enemy_speed) 
     all_sprites_list.add(enemy)
     moving_objects.append(enemy)
     enemies.append(enemy)
@@ -271,36 +271,43 @@ def bulletUpdate():
     global bulletList
     global enemyGroup
     count=0
-    for bullet in bulletList:
+    bullet2=[]
+    indices=[]
+    for index, bullet in enumerate(bulletList):
         bullet.update()
-        count=0
         if bullet.friendly and bullet.life>10*player.bullet_range+10:
             count+=1
             bullet.kill()
             del bullet
+            indices=indices+[index]
         elif bullet.life>100:
             bullet.kill()
             del bullet
+            indices=indices+[index]
         elif bullet.active and bullet.friendly:
             for index, enemy in enumerate(pygame.sprite.spritecollide(bullet, enemyGroup, False)):
                 enemy.health-=bullet.damage
-                print(enemy.health)
                 if enemy.health<=0:
                     global enemies
-                    print("hey")
                     enemy.kill()
                     del enemy
                     enemies=enemies[:index]+enemies[index+1:]
                     break
                 bullet.active=False
                 bullet.kill()
+                del bullet
+                indices=indices+[index]
                 
         elif bullet.active and not bullet.friendly and pygame.sprite.collide_rect(player, bullet):
             player.health-=bullet.damage
             bullet.active=False
             bullet.kill()
             del bullet
-    bulletList=bulletList[count:]
+            indices=indices+[index]
+    for i in bulletList:
+        if i not in indices:
+            bullet2=bullet2+[i]
+    bulletList=bullet2
 def enemyFire(ship):
 
     if ship.type==1 and random.randint(0,400)<5:
@@ -422,7 +429,6 @@ while running:
             angle=(90-(angle*-1))+270
         angle=round(angle/45)%8
         player.updateDir(angle)
-        #print(angle)
 
     screen.fill("blue")
     minimap.fill((255, 255, 255))
