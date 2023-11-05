@@ -266,6 +266,10 @@ while running:
                 sprite.shiftPositionX(-velocity[0])
                 sprite.shiftPositionY(-velocity[1])
                 sprite.speed *= -1
+                if player.ramming and not sprite.ramming:
+                    sprite.health -= 1
+                elif not player.ramming and sprite.ramming:
+                    player.health -= 1
             if type(sprite) == Island:
                 for sprite in moving_objects:
                     sprite.shiftPositionX(-velocity[0])
