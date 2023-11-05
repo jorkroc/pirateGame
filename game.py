@@ -35,11 +35,11 @@ minimap_pos_x = (screen_width/2 * (minimap_width / screen_width))/0.1
 minimap_pos_y = (screen_height/2 * (minimap_height / screen_height))/0.1
 
 num_islands = 150
-num_enemies = 100
-enemy_speed = 5
+num_enemies = 50
+enemy_speed = 10
 enemy_range = 200
 
-font_size = 20
+font_size = 25
 font = pygame.font.SysFont('Courier New', font_size)
 black = (0, 0, 0)
 white = (255, 255, 255)
@@ -57,9 +57,6 @@ running = True
 dt = 0
 bought = False
 
-shift = 1
-velocity = [0,0]
-
 all_sprites_list = pygame.sprite.Group()
 bulletList = []
 moving_objects = []
@@ -67,6 +64,8 @@ moving_objects = []
 player = PlayerShip(screen.get_width()/2, screen.get_height()/2)
 home = Home()
 player.health = 100
+shift = player.speed
+velocity = [0,0]
 
 all_sprites_list.add(home)
 moving_objects.append(home)
@@ -91,18 +90,7 @@ for j in range (8):
         all_sprites_list.add(border2)
         moving_objects.append(border2)
 
-for i in range(num_islands):
-    randX = random.randint(-int(map_width/2), int(map_width/2))
-    randY = random.randint(-int(map_width/2), int(map_width/2))
-    position = pygame.Vector2(randX, randY)
-    island = Island(position, "yellow", random.randint(10, 100))
-    while pygame.sprite.collide_rect(home, island) or pygame.sprite.collide_rect(player, island):
-        randX = random.randint(-int(map_width/2), int(map_width/2))
-        randY = random.randint(-int(map_width/2), int(map_width/2))
-        position = pygame.Vector2(randX, randY)
-        island = Island(position, "yellow", random.randint(10, 100))
-    all_sprites_list.add(island)
-    moving_objects.append(island)
+
 
 enemies = []
 for i in range(num_enemies//4):
@@ -161,6 +149,19 @@ all_sprites_list.add(finalboss)
 moving_objects.append(finalboss)
 enemies.append(finalboss)
 
+for i in range(num_islands):
+    randX = random.randint(-int(map_width/2), int(map_width/2))
+    randY = random.randint(-int(map_width/2), int(map_width/2))
+    position = pygame.Vector2(randX, randY)
+    island = Island(position, "yellow", random.randint(10, 100))
+    while pygame.sprite.collide_rect(home, island) or pygame.sprite.collide_rect(player, island):
+        randX = random.randint(-int(map_width/2), int(map_width/2))
+        randY = random.randint(-int(map_width/2), int(map_width/2))
+        position = pygame.Vector2(randX, randY)
+        island = Island(position, "yellow", random.randint(10, 100))
+    all_sprites_list.add(island)
+    moving_objects.append(island)
+
 
 ship_types = [Grape, Ship, Rammer, Jugger, FinalBoss]
 
@@ -172,12 +173,14 @@ def writeToScreen(screen, text, font_size, x, y, bg=True):
             screen.blit(letters_nobg[char], (x + i * font_size / 2, y))
 
 def parseOption(option, player):
+    if player.gold <= 0:
+        return
     if option != 0:
         player.gold -= 1
     if option == 1:
         player.max_health += 1
     elif option == 2:
-        player.speed += 1
+        player.speed += 0.1
     elif option == 3:
         player.bullet_speed += 1
     elif option == 4:
@@ -197,7 +200,7 @@ def drawUpgradeMenu(screen, font_size):
     bg.fill((255, 255, 255))
     screen.blit(bg, (tlx, tly))
 
-    bhx, bhy, pad, pad2 = 200, 200, 15, 5
+    bhx, bhy, pad, pad2 = 100, 100, 15, 5
     stats = ["Max Health", "Speed", "Bullet Speed", "Rate of Fire", "Damage", "Bullet Range"]
     for dis, stat in enumerate(stats):
         bhtext = "Increase {}".format(stat)
@@ -308,6 +311,7 @@ def enemyFire(ship):
         all_sprites_list.add(bullet)
     
 
+all_enemies = enemies
 while running:
 
     for event in pygame.event.get():
@@ -317,8 +321,6 @@ while running:
     for sprite in moving_objects:
         if type(sprite) == Ship:
             sprite.speed = abs(sprite.speed) 
-
-    pygame.draw.circle(screen, island.color, island.position, 30)
 
     keys = pygame.key.get_pressed()
     if keys[pygame.K_w]:
@@ -341,7 +343,6 @@ while running:
     for sprite in moving_objects:
         sprite.shiftPositionX(velocity[0])
         sprite.shiftPositionY(velocity[1])
-
         if pygame.sprite.collide_rect(player, sprite):
             if type(sprite) in ship_types:
                 sprite.shiftPositionX(-velocity[0])
@@ -352,10 +353,13 @@ while running:
                 elif not player.ramming and sprite.ramming:
                     player.health -= 1
             if (type(sprite) == Island):
-                for sprite in moving_objects:
-                    sprite.shiftPositionX(-velocity[0])
-                    sprite.shiftPositionY(-velocity[1])
-                player.gold += 1
+                for sprite2 in moving_objects:
+                    sprite2.shiftPositionX(-velocity[0])
+                    sprite2.shiftPositionY(-velocity[1])
+                if sprite.treasure > 0:
+                    plunder_rate = 0.1
+                    player.gold += plunder_rate
+                    sprite.treasure -= plunder_rate
                 touchingIsland = True
             if (type(sprite) == Endwall):
                 for sprite in moving_objects:
@@ -365,12 +369,10 @@ while running:
             if type(sprite) == Home:
                 at_home = True
 
-    for enemy in enemies:
+    for enemy in all_enemies:
         if math.hypot((enemy.xpos-player.xpos), (enemy.ypos-player.ypos)) <= enemy_range:
-            #print("Chase")
             enemy.chase(player)
         if abs(1280/2-enemy.xpos)<400 and abs(720/2-enemy.ypos)<400:
-            print("ya")
             enemyFire(enemy)
     
     
@@ -450,7 +452,7 @@ while running:
     show_stats = ["gold", "health", "speed", "bullet speed", "rate of fire", "damage", "bullet range"]
     stat_map = {
         "gold":player.gold,
-        "speed":player.speed,
+        "speed":round(player.speed,1),
         "bullet speed":player.bullet_speed,
         "rate of fire":player.rate_of_fire,
         "damage":player.damage,
@@ -462,10 +464,14 @@ while running:
     for i, stat in enumerate(show_stats):
         if stat == "health":
             writeToScreen(screen, "{}/{}".format(truncate(player.health), player.max_health), font_size, stat_x, dis * i + pad)
+        elif stat == "gold":
+            writeToScreen(screen, "{}: {}".format(stat, truncate(player.gold, 0)), font_size, stat_x, dis * i + pad)
         else:
             writeToScreen(screen, "{}: {}".format(stat, stat_map[stat]), font_size, stat_x, dis * i + pad)
     pygame.display.flip()
 
     dt = clock.tick(60) / 1000
+
+    shift = player.speed
 
 pygame.quit()
