@@ -31,7 +31,7 @@ minimap_rect.topleft = (10, 10)
 minimap_pos_x = (screen_width/2 * (minimap_width / screen_width))/0.1
 minimap_pos_y = (screen_height/2 * (minimap_width / screen_width))/0.1
 
-num_islands = 50
+num_islands = 500
 num_enemies = 10
 enemy_speed = 5
 enemy_range = 200
@@ -207,6 +207,9 @@ while running:
                 sprite.shiftPositionY(-velocity[1])
                 sprite.speed *= -1
             if type(sprite) == Island:
+                for sprite in moving_objects:
+                    sprite.shiftPositionX(-velocity[0])
+                    sprite.shiftPositionY(-velocity[1])
                 gold += 1
 
 
