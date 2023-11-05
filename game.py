@@ -209,6 +209,8 @@ while running:
                     sprite.shiftPositionX(-velocity[0])
                     sprite.shiftPositionY(-velocity[1])
                 gold += 1
+            if type(sprite) == Home:
+                pass
 
 
     for enemy in enemies:
