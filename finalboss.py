@@ -1,4 +1,5 @@
 from ship import Ship
+import pygame
 
 class FinalBoss(Ship):
     def __init__(self, xpos, ypos, speed):
@@ -7,6 +8,7 @@ class FinalBoss(Ship):
         self.xpos=xpos
         self.ypos=ypos
         self.health=50
+        self.image = pygame.image.load('images/final_boss.png').convert_alpha()
     def attack(self, player):
         pass
         #Implement
