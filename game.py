@@ -6,9 +6,9 @@ from Island import Island
 from playership import PlayerShip
 from home import Home
 from bullets import Bullet
-from grape import Grape
-from jugger import Jugger
-from rammer import Rammer
+#from grape import Grape
+#from jugger import Jugger
+#from rammer import Rammer
 
 pygame.init()
 
@@ -18,13 +18,13 @@ map_width = 1000
 map_height = 1000
 title = "Pirate Game"
 
-minimap_width = 150
+minimap_width = 100
 minimap_height = 100
 minimap = pygame.Surface((minimap_width, minimap_height))
 minimap_rect = minimap.get_rect()
 minimap_rect.topleft = (10, 10)
 minimap_pos_x = (screen_width/2 * (minimap_width / screen_width))/0.1
-minimap_pos_y = (screen_height/2 * (minimap_width / screen_width))/0.1
+minimap_pos_y = (screen_height/2 * (minimap_height / screen_height))/0.1
 
 num_islands = 50
 num_enemies = 10
@@ -79,7 +79,7 @@ for i in range(num_enemies%4):
 for i in range(num_enemies//4):
     randX = random.randint(-map_width//10, map_width//10)*10
     randY = random.randint(-map_width//10, map_width//10)*10
-    enemy = Jugger(randX, randY, enemy_speed) 
+    enemy = Jagger(randX, randY, enemy_speed)
     while pygame.sprite.collide_rect(home, enemy) or pygame.sprite.collide_rect(player,enemy):
         randX = random.randint(-map_width//10, map_width//10)*10
         randY = random.randint(-map_width//10, map_width//10)*10
@@ -154,16 +154,21 @@ while running:
     velocity[1] *= 0.9
 
     screen.fill("blue")
-    minimap.fill((255, 255, 255))  # Clear the minimap
-    #self.position.x += shift
-    #self.rect.center=self.position
+    minimap.fill((255, 255, 255))
+
+    all_sprites_list.draw(screen)
+
+    #for minimap
     minimap_pos_x -= velocity[0] * (minimap_width / screen_width)
     minimap_pos_y -= velocity[1] * (minimap_width / screen_width)
 
+    pygame.draw.rect(minimap, "black", pygame.Rect(0, 33, 25, 67))  
+    pygame.draw.rect(minimap, "green", pygame.Rect(60, 0, 40, 50))
+    pygame.draw.rect(minimap, "purple", pygame.Rect(40, 67, 60, 33))
+    pygame.draw.rect(minimap, "grey", pygame.Rect(20, 10, 20, 10))
+
     pygame.draw.circle(minimap, "red", (int(0.1*(minimap_pos_x + (minimap_width / screen_width))), int(0.1*(minimap_pos_y - (minimap_height / screen_height)))), 5)
-    screen.blit(minimap, minimap_rect)
-    
-    all_sprites_list.draw(screen) 
+    screen.blit(minimap, minimap_rect) 
 
     pygame.display.flip()
 
