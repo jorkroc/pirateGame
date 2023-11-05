@@ -172,11 +172,12 @@ def writeToScreen(screen, text, font_size, x, y, bg=True):
         else:
             screen.blit(letters_nobg[char], (x + i * font_size / 2, y))
 
+costs = {i+1:5 for i in range(6)}
 def parseOption(option, player):
-    if player.gold < 1:
+    if option == 0 or player.gold < costs[option]:
         return
-    if option != 0:
-        player.gold -= 1
+    player.gold -= costs[option]
+    costs[option] *= 2
     if option == 1:
         player.max_health += 1
     elif option == 2:
