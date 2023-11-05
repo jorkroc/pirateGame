@@ -496,6 +496,12 @@ while running:
             writeToScreen(screen, "{}: {}".format(stat, (int)(player.gold)), font_size, stat_x, dis * i + pad)
         else:
             writeToScreen(screen, "{}: {}".format(stat, stat_map[stat]), font_size, stat_x, dis * i + pad)
+    
+    if player.health <= 0:
+        writeToScreen(screen, "You're Dead", font_size, screen_width / 2 - 80, screen_height / 2 - 15)
+    if finalboss.health <= 0:
+        writeToScreen(screen, "You Win!", font_size, screen_width / 2 - 60, screen_height / 2 - 15)
+
     pygame.display.flip()
 
     dt = clock.tick(60) / 1000
