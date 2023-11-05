@@ -53,6 +53,7 @@ pygame.display.set_caption(title)
 clock = pygame.time.Clock()
 running = True
 dt = 0
+bought = False
 
 shift = 1
 velocity = [0,0]
@@ -172,7 +173,7 @@ def drawUpgradeMenu(screen, font_size):
 
     bhx, bhy = 200, 200
     pad = 15
-    buy_health_text = "Increase Health"
+    buy_health_text = "Increase Max Health"
     bhw, bhh = len(buy_health_text) * font_size / 2, font_size
     buy_health_but = pygame.Surface([bhw + pad * 2, bhh + pad * 2])
     buy_health_but.fill((128, 128, 128))
@@ -180,12 +181,13 @@ def drawUpgradeMenu(screen, font_size):
 
     screen.blit(bg, (tlx, tly))
     screen.blit(buy_health_but, (tlx + bhx - pad, tly + bhy - pad))
-    writeToScreen(screen, "Increase Health", font_size, tlx + bhx, tly + bhy, False) 
+    writeToScreen(screen, buy_health_text, font_size, tlx + bhx, tly + bhy, False) 
     if pygame.mouse.get_pressed()[0]:
         mx = pygame.mouse.get_pos()[0]
         my = pygame.mouse.get_pos()[1]
         if tlx + bhx <= mx <= tlx + bhx + bhw and tly + bhy <= my <= tly + bhy + bhh:
-           return 0
+           return 1
+    return 0
 
 def truncate(x, d=2):
     y = x * 10**d
@@ -302,8 +304,15 @@ while running:
     player.health -= 0.001
     if at_home:
         player.health = player.max_health
-        if drawUpgradeMenu(screen, font_size) == 0:
+        option = drawUpgradeMenu(screen, font_size)
+        if option == 1 and not bought:
+            gold -= 1
             player.max_health += 1
+        
+        if option == 0:
+            bought = False
+        else:
+            bought = True
     
     writeToScreen(screen, "Gold: {}".format(gold), font_size, screen_width - 250, 20)
     writeToScreen(screen, "{}/{}".format(truncate(player.health), player.max_health), font_size, screen_width - 250, 60)
