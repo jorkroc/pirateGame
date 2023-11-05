@@ -204,7 +204,7 @@ def drawUpgradeMenu(screen, font_size):
     bhx, bhy, pad, pad2 = 100, 100, 15, 5
     stats = ["Max Health", "Speed", "Bullet Speed", "Rate of Fire", "Damage", "Bullet Range"]
     for dis, stat in enumerate(stats):
-        bhtext = "Increase {}".format(stat)
+        bhtext = "Increase {}: {} gold".format(stat, costs[dis+1])
         bhw, bhh = len(bhtext) * font_size / 2, font_size
         bhbut = pygame.Surface([bhw + pad * 2, bhh + pad * 2])
         bhbut.fill((128, 128, 128))
@@ -218,7 +218,7 @@ def drawUpgradeMenu(screen, font_size):
         mx = pygame.mouse.get_pos()[0]
         my = pygame.mouse.get_pos()[1]
         for i, stat in enumerate(stats):
-            bhtext = "Increase {}".format(stat)
+            bhtext = "Increase {}: {} gold".format(stat, costs[i+1])
             bhw, bhh = len(bhtext) * font_size / 2, font_size
             if tlx + bhx <= mx <= tlx + bhx + bhw + 2 * pad and tly + bhy <= my <= tly + bhy + i * (font_size + pad * 2 + pad2) + bhh + pad * 2:
                 return i + 1
