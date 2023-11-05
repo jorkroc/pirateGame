@@ -42,9 +42,11 @@ font = pygame.font.SysFont('Courier New', font_size)
 black = (0, 0, 0)
 white = (255, 255, 255)
 letters = {}
+letters_nobg = {}
 for i in range(32, 127):
     char = chr(i)
     letters[char] = font.render(char, False, black, white)
+    letters_nobg[char] = font.render(char, False, black)
 
 screen = pygame.display.set_mode((screen_width, screen_height))
 pygame.display.set_caption(title)
@@ -135,9 +137,12 @@ enemies.append(finalboss)
 
 ship_types = [Grape, Ship, Rammer, Jugger, FinalBoss]
 
-def writeToScreen(screen, text, font_size, x, y):
+def writeToScreen(screen, text, font_size, x, y, bg=True):
     for i, char in enumerate(text):
-        screen.blit(letters[char], (x + i * font_size / 2, y))
+        if bg:
+            screen.blit(letters[char], (x + i * font_size / 2, y))
+        else:
+            screen.blit(letters_nobg[char], (x + i * font_size / 2, y))
 
 def drawUpgradeMenu(screen, font_size):
     w, h = 600, 600
@@ -146,7 +151,9 @@ def drawUpgradeMenu(screen, font_size):
     bg.set_alpha(128)
     bg.fill((255, 255, 255))
     screen.blit(bg, ((sw - w) / 2, (sh - h) / 2))
-    writeToScreen(screen, "Love you <3", font_size, 400, 400)
+    writeToScreen(screen, "Love you <3", font_size, 400, 400, False)
+    if pygame.mouse.get_pressed()[0]:
+        print(pygame.mouse.get_pos())
 
 # PLAYER HAS TO BE THE LAST ADDED
 all_sprites_list.add(player)
@@ -250,7 +257,8 @@ while running:
     if at_home:
         drawUpgradeMenu(screen, font_size)
  
-    writeToScreen(screen, "Current Gold: {}".format(gold), font_size, screen_width - 300, 20)
+    writeToScreen(screen, "Gold: {}".format(gold), font_size, screen_width - 250, 20)
+    writeToScreen(screen, "Health: {}".format(player.health), font_size, screen_width - 250, 60)
 
     pygame.display.flip()
 
