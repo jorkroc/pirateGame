@@ -287,7 +287,7 @@ def bulletUpdate():
             bullet.kill()
     bulletList=bulletList[count:]
 
-
+all_enemies = enemies
 while running:
 
     for event in pygame.event.get():
@@ -345,8 +345,7 @@ while running:
             if type(sprite) == Home:
                 at_home = True
 
-    for enemy in enemies:
-        print(math.hypot((enemy.xpos-player.xpos), (enemy.ypos-player.ypos)) <= enemy_range)
+    for enemy in all_enemies:
         if math.hypot((enemy.xpos-player.xpos), (enemy.ypos-player.ypos)) <= enemy_range:
             print("Chase")
             enemy.chase(player)
