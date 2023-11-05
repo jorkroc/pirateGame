@@ -68,23 +68,25 @@ player.health = 100
 all_sprites_list.add(home)
 moving_objects.append(home)
 
-for i in range(20):
-    x = 80*i
-    border1 = Island(pygame.Vector2(x, 0), "black", 0)
-    border2 = Island(pygame.Vector2(x, 4000), "black", 0)
-    all_sprites_list.add(border1)
-    moving_objects.append(border1)
-    all_sprites_list.add(border2)
-    moving_objects.append(border2)
+for j in range (8):
+    for i in range(-100, 100):
+        x = 80*i
+        w = 80*j
+        border1 = Island(pygame.Vector2(x, -6500-w), "black", 0)
+        border2 = Island(pygame.Vector2(x, 7000+w), "black", 0)
+        all_sprites_list.add(border1)
+        moving_objects.append(border1)
+        all_sprites_list.add(border2)
+        moving_objects.append(border2)
 
-for i in range(20):
-    y = 80*i
-    border1 = Island(pygame.Vector2(0, y), "black", 0)
-    border2 = Island(pygame.Vector2(4000, y), "black", 0)
-    all_sprites_list.add(border1)
-    moving_objects.append(border1)
-    all_sprites_list.add(border2)
-    moving_objects.append(border2)
+    for i in range(-100, 100):
+        y = 80*i
+        border1 = Island(pygame.Vector2(-6000-w, y), "black", 0)
+        border2 = Island(pygame.Vector2(7500+w, y), "black", 0)
+        all_sprites_list.add(border1)
+        moving_objects.append(border1)
+        all_sprites_list.add(border2)
+        moving_objects.append(border2)
 
 for i in range(num_islands):
     randX = random.randint(-map_width//10, map_width//10)*10
@@ -244,7 +246,7 @@ while running:
                 for sprite in moving_objects:
                     sprite.shiftPositionX(-velocity[0])
                     sprite.shiftPositionY(-velocity[1])
-                gold += 1
+                    gold += 1
                 touchingIsland = True
             if type(sprite) == Home:
                 at_home = True
