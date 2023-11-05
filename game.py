@@ -129,6 +129,12 @@ while running:
         if event.type == pygame.QUIT:
             running = False
 
+    for sprite in moving_objects:
+        try:
+            sprite.speed = abs(sprite.speed) 
+        except:
+            pass
+
     pygame.draw.circle(screen, island.color, island.position, 30)
 
     keys = pygame.key.get_pressed()
@@ -145,13 +151,17 @@ while running:
         sprite.shiftPositionX(velocity[0])
         sprite.shiftPositionY(velocity[1])
         if pygame.sprite.collide_rect(player, sprite):
-            try:
-                if player.health > sprite.health:
-                    print("collision")
-                else:
-                    print("player dead")
-            except:
-                print("nope")
+            sprite.shiftPositionX(-velocity[0])
+            sprite.shiftPositionY(-velocity[1])
+            sprite.speed *= -1
+            # try:
+            #     if player.health > sprite.health:
+            #         print("collision")
+            #     else:
+            #         print("player dead")
+            # except:
+            #     print("nope")
+
 
 
     for enemy in enemies:
