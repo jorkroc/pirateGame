@@ -286,6 +286,7 @@ def bulletUpdate():
             player.health-=bullet.damage
             bullet.active=False
             bullet.kill()
+            del bullet
     bulletList=bulletList[count:]
 
 
