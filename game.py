@@ -11,6 +11,7 @@ from jugger import Jugger
 from rammer import Rammer
 from finalboss import FinalBoss
 from endwall import Endwall
+from waves import Waves
 import time
 import numpy as np
 
@@ -38,6 +39,7 @@ num_islands = 150
 num_enemies = 50
 enemy_speed = 5
 enemy_range = 200
+num_waves = 600
 
 font_size = 20
 font = pygame.font.SysFont('Courier New', font_size)
@@ -150,19 +152,27 @@ moving_objects.append(finalboss)
 enemies.append(finalboss)
 
 for i in range(num_islands):
-    randX = random.randint(-int(map_width/2), int(map_width/2))
-    randY = random.randint(-int(map_width/2), int(map_width/2))
+    randX = random.randint(-int(map_width/2), int(map_width/2))/1.05 + 600
+    randY = random.randint(-int(map_width/2), int(map_width/2))/1.05 + 300
     position = pygame.Vector2(randX, randY)
     island = Island(position, "yellow", random.randint(10, 100))
     while pygame.sprite.collide_rect(home, island) or pygame.sprite.collide_rect(player, island):
-        randX = random.randint(-int(map_width/2), int(map_width/2))
-        randY = random.randint(-int(map_width/2), int(map_width/2))
+        randX = random.randint(-int(map_width/2), int(map_width/2))/1.05 + 600
+        randY = random.randint(-int(map_width/2), int(map_width/2))/1.05 + 300
         position = pygame.Vector2(randX, randY)
         island = Island(position, "yellow", random.randint(10, 100))
     print(id(island))
     all_sprites_list.add(island)
     moving_objects.append(island)
 
+#for waves
+for i in range(num_waves):
+    randX = random.randint(-int(map_width/2), int(map_width/2))/1.05 + 600
+    randY = random.randint(-int(map_width/2), int(map_width/2))/1.05 + 300
+    position = pygame.Vector2(randX, randY)
+    wave = Waves(position, "grey")
+    all_sprites_list.add(wave)
+    moving_objects.append(wave)
 
 ship_types = [Grape, Ship, Rammer, Jugger, FinalBoss]
 
