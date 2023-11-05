@@ -36,7 +36,7 @@ minimap_pos_y = (screen_height/2 * (minimap_height / screen_height))/0.1
 
 num_islands = 150
 num_enemies = 50
-enemy_speed = 5
+enemy_speed = 10
 enemy_range = 200
 
 font_size = 25
