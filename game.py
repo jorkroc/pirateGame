@@ -105,7 +105,7 @@ for i in range(num_islands):
     moving_objects.append(island)
 
 enemies = []
-for i in range(num_enemies%4):
+for i in range(num_enemies//4):
     randX = random.randint(-int(map_width/2), int(map_width/2))
     randY = random.randint(-int(map_height/2), int(map_height/2))
     enemy = Ship("orange", 40, 40, randX, randY, enemy_speed)
