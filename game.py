@@ -189,7 +189,7 @@ while running:
     screen.blit(minimap, minimap_rect)
     
     all_sprites_list.draw(screen) 
-    writeToScreen(screen, "Current Gold: {}".format(gold), font_size, 600, 600)
+    writeToScreen(screen, "Current Gold: {}".format(gold), font_size, screen_width - 300, 20)
 
     pygame.display.flip()
     gold += 1
